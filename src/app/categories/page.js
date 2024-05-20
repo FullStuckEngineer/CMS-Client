@@ -2,6 +2,9 @@
 import Button from "@/components/ui/Button";
 import { ArrowSquareIn } from "@phosphor-icons/react";
 import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import router from "next/router";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const categoriesData = [
@@ -13,6 +16,13 @@ const categoriesData = [
 ];
 
 const CategoriesPage = () => {
+    // GET Session, if !session, redirect to /auth/login
+    const { data: session } = useSession();
+    const router = useRouter();
+    if (!session) {
+        router.push("/auth/login");
+    }
+
     const [searchTerm, setSearchTerm] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
     const [sortBy, setSortBy] = useState("");

@@ -1,11 +1,12 @@
-import { CardProduct } from "@/components/ui/CardProduct";
+import { redirect } from 'next/navigation';
+import { getSession } from 'next-auth/react';
 
-export default function HomePage() {
-  return (
-    <div>
-      
-      <h1>Welcome to the Home Page</h1>
-      <CardProduct/>
-    </div>
-  );
+export default async function HomePage() {
+  const session = await getSession();
+
+  if (session) {
+    redirect('/dashboard');
+  } else {
+    redirect('/auth/login');
+  }
 }
