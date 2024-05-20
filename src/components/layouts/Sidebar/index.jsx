@@ -13,7 +13,7 @@ const Sidebar = () => {
     { name: "Products", path: "/products" },
     { name: "Transactions", path: "/transactions" },
     { name: "Cities", path: "/cities" },
-    { name: "Courier", path: "/courier" },
+    { name: "Courier", path: "/couriers" },
     { name: "Store Profile", path: "/store" },
   ];
 
