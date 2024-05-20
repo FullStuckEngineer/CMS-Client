@@ -25,7 +25,7 @@ export default function RootLayout({ children, session }) {
       >
         <SessionProviderWrapper session={session}>
           <div className="flex-2 ml-64 w-full">
-            <Sidebar />
+            {session && <Sidebar />}
             <Navbar />
             <main className="p-4 mt-16 w-full">
               {children}

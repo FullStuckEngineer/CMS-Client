@@ -7,7 +7,7 @@ const Sidebar = () => {
   const router = useRouter();
 
   const menuItems = [
-    { name: "Dashboard", path: "/" },
+    { name: "Dashboard", path: "/dashboard" },
     { name: "Users", path: "/users" },
     { name: "Categories", path: "/categories" },
     { name: "Products", path: "/products" },
