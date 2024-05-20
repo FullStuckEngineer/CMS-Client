@@ -18,14 +18,13 @@ const productsData = [
         { id: 10, name: "Product Ten", price: 110, weight: 1.1, category: "Pakaian", stock: 11, sku: "SKU010", slug: "product-ten", status: "Inactive" },
     ],
     [
-        { id: 11, name: "Product Eleven", price: 160, weight: "1.6 kg", category: "Mainan", stock: 16, sku: "SKU011", slug: "product-eleven", status: "Active" },
-        { id: 12, name: "Product Twelve", price: 210, weight: "2.1 kg", category: "Perlengkapan Tidur", stock: 21, sku: "SKU012", slug: "product-twelve", status: "Active" },
-        { id: 13, name: "Product Thirteen", price: 125, weight: "1.25 kg", category: "Pakaian", stock: 13, sku: "SKU013", slug: "product-thirteen", status: "Inactive" },
-        { id: 14, name: "Product Fourteen", price: 175, weight: "1.75 kg", category: "Mainan", stock: 17, sku: "SKU014", slug: "product-fourteen", status: "Active" },
-        { id: 15, name: "Product Fifteen", price: 195, weight: "1.95 kg", category: "Perlengkapan Tidur", stock: 19, sku: "SKU015", slug: "product-fifteen", status: "Inactive" }
+        { id: 11, name: "Product Eleven", price: 160, weight: 1.6, category: "Mainan", stock: 16, sku: "SKU011", slug: "product-eleven", status: "Active" },
+        { id: 12, name: "Product Twelve", price: 210, weight: 2.1, category: "Perlengkapan Tidur", stock: 21, sku: "SKU012", slug: "product-twelve", status: "Active" },
+        { id: 13, name: "Product Thirteen", price: 125, weight: 1.25, category: "Pakaian", stock: 13, sku: "SKU013", slug: "product-thirteen", status: "Inactive" },
+        { id: 14, name: "Product Fourteen", price: 175, weight: 1.75, category: "Mainan", stock: 17, sku: "SKU014", slug: "product-fourteen", status: "Active" },
+        { id: 15, name: "Product Fifteen", price: 195, weight: 1.95, category: "Perlengkapan Tidur", stock: 19, sku: "SKU015", slug: "product-fifteen", status: "Inactive" }
     ]
 ];
-
 
 const getUniqueCategories = (data) => {
     const categories = new Set();
@@ -57,8 +56,6 @@ const ProductsPage = () => {
     }, [searchTerm, filterStatus, filterCategory, sortBy, products]);
 
     const fetchProductData = async () => {
-        setProducts(productsData[currentPage - 1]);
-        setTotalPages(2);
         // try {
         //     const response = await axios.get(`{{baseURL}}/cms/products?page=${currentPage}`);
         //     setProducts(response.data.products);
@@ -66,6 +63,9 @@ const ProductsPage = () => {
         // } catch (error) {
         //     console.error("Error fetching product data:", error);
         // }
+        
+        setProducts(productsData[currentPage - 1]);
+        setTotalPages(2);
     };
 
     const filterProductData = () => {
@@ -89,9 +89,12 @@ const ProductsPage = () => {
 
         if (sortBy) {
             filteredData.sort((a, b) => {
-                if (a[sortBy] < b[sortBy]) return -1;
-                if (a[sortBy] > b[sortBy]) return 1;
-                return 0;
+                const aValue = a[sortBy];
+                const bValue = b[sortBy];
+                if (typeof aValue === 'number' && typeof bValue === 'number') {
+                    return aValue - bValue;
+                }
+                return aValue.localeCompare(bValue);
             });
         }
 
@@ -182,7 +185,7 @@ const ProductsPage = () => {
                                 <td className="px-4 py-2 w-32 overflow-hidden whitespace-nowrap truncate text-center">{product.id}</td>
                                 <td className="px-4 py-2 w-60 overflow-hidden whitespace-nowrap truncate text-center">{product.name}</td>
                                 <td className="px-4 py-2 w-80 overflow-hidden whitespace-nowrap truncate text-center">{product.price}</td>
-                                <td className="px-4 py-2 w-40 overflow-hidden whitespace-nowrap truncate text-center">{product.weight}</td>
+                                <td className="px-4 py-2 w-40 overflow-hidden whitespace-nowrap truncate text-center">{product.weight} kg</td>
                                 <td className="px-4 py-2 w-80 overflow-hidden whitespace-nowrap truncate text-center">{product.category}</td>
                                 <td className="px-4 py-2 w-80 overflow-hidden whitespace-nowrap truncate text-center">{product.stock}</td>
                                 <td className="px-4 py-2 w-80 overflow-hidden whitespace-nowrap truncate text-center">{product.sku}</td>
