@@ -2,7 +2,6 @@ import { Poppins } from "next/font/google";
 import Navbar from "@/components/layouts/Navbar";
 import "./globals.css";
 import SessionProviderWrapper from "@/components/layouts/SessionProviderWrapper";
-import SessionChecker from "@/components/layouts/SessionChecker";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -16,7 +15,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children, session }) {
-  console.log("Rendering RootLayout with session:", session);
   return (
     <html lang="en">
       <body
@@ -25,9 +23,7 @@ export default function RootLayout({ children, session }) {
       >
         <SessionProviderWrapper session={session}>
           <Navbar />
-          <SessionChecker session={session}>
             {children}
-          </SessionChecker>
         </SessionProviderWrapper>
       </body>
     </html>

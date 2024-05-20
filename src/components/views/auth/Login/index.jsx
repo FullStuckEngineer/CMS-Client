@@ -29,7 +29,7 @@ const LoginView = () => {
       if (!res?.error) {
         setIsLoading(false);
         form.reset();
-        router.push('/');
+        router.push('/'); // Menggunakan router.push dari next/navigation
       } else {
         setIsLoading(false);
         setError("Email or password is incorrect");

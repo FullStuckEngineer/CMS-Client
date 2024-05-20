@@ -3,7 +3,7 @@
 import InputSearch from "@/components/layouts/Navbar/InputSearch";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import React from "react";
 import { BellSimple, ShoppingCart } from "@phosphor-icons/react";
 
@@ -36,16 +36,27 @@ const Navbar = () => {
             </div>
           </div>
           <div className="flex sm:flex-row justify-between items-center md:items-center gap-3">
-            <Link href="/auth/login">
-              <Button className="border border-color-green hover:border-color-greenhover text-color-green rounded-lg h-10 md:w-32 w-40 ">
-                {session ? "Logout" : "Login"}
+            {session ? (
+              <Button
+                onClick={() => signOut()}
+                className="border border-color-green hover:border-color-greenhover text-color-green rounded-lg h-10 md:w-32 w-40 "
+              >
+                Logout
               </Button>
-            </Link>
-            <Link href="/auth/register">
-              <Button className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40 ">
-                Register
-              </Button>
-            </Link>
+            ) : (
+              <>
+                <Link href="/auth/login">
+                  <Button className="border border-color-green hover:border-color-greenhover text-color-green rounded-lg h-10 md:w-32 w-40 ">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/auth/register">
+                  <Button className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40 ">
+                    Register
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
