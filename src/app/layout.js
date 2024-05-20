@@ -24,10 +24,10 @@ export default function RootLayout({ children, session }) {
         suppressHydrationWarning={true}
       >
         <SessionProviderWrapper session={session}>
-          <div className="flex-2 ml-64">
+          <div className="flex-2 ml-64 w-full">
             <Sidebar />
             <Navbar />
-            <main className="p-4 mt-16">
+            <main className="p-4 mt-16 w-full">
               {children}
             </main>
           </div>
