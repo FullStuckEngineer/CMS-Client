@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Menggunakan next/navigation untuk Next.js 13
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import Input from "@/components/ui/Input";
@@ -14,6 +14,7 @@ const LoginView = () => {
   const router = useRouter();
 
   const handleSubmit = async (event) => {
+    console.log("event", event);
     event.preventDefault();
     setIsLoading(true);
     setError("");
@@ -29,7 +30,7 @@ const LoginView = () => {
       if (!res?.error) {
         setIsLoading(false);
         form.reset();
-        router.push('/'); // Menggunakan router.push dari next/navigation
+        router.push('/');
       } else {
         setIsLoading(false);
         setError("Email or password is incorrect");
@@ -49,7 +50,6 @@ const LoginView = () => {
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <Input label="Email" name="email" type="email" placeholder="Email" />
-        <Input label="Role" name="role" type="text" placeholder="Role" />
         <Input
           label="Password"
           name="password"

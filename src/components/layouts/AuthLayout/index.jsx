@@ -14,8 +14,8 @@ const AuthLayout = (props) => {
           className="rounded-xl p-5"
         />
       </div>
-      <div className="flex flex-col items-center justify-center md:w-1/2 w-full h-max">
-        {error && <p className="text-color-red mb-2">{error}</p>}
+      <div className="flex flex-col items-center justify-center md:w-1/2 w-full min-h-full">
+      {error && <p className="text-color-red mb-2">{error}</p>}
         <div className="w-full bg-color-primary md:w-2/3 px-10 py-14 shadow-xl rounded-lg">
           <h1 className="text-[32px] font-medium mb-2 ">
             <span className="text-color-green font-bold">BabyBoo</span> {title}
