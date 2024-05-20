@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation"; // Menggunakan next/navigation untuk Next.js 13
 import { signIn } from "next-auth/react";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import Input from "@/components/ui/Input";
@@ -11,9 +11,7 @@ import Button from "@/components/ui/Button";
 const LoginView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  // const { push, query } = useRouter();
-
-  // const callbackUrl = query.callbackUrl || "/";
+  const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,12 +24,12 @@ const LoginView = () => {
         email: form.email.value,
         role: form.role.value,
         password: form.password.value,
-        callbackUrl,
+        callbackUrl: '/',
       });
       if (!res?.error) {
         setIsLoading(false);
         form.reset();
-        push(callbackUrl);
+        router.push('/');
       } else {
         setIsLoading(false);
         setError("Email or password is incorrect");
@@ -65,6 +63,7 @@ const LoginView = () => {
           {isLoading ? "Loading..." : "Login"}
         </Button>
       </form>
+      {error && <p>{error}</p>}
     </AuthLayout>
   );
 };
