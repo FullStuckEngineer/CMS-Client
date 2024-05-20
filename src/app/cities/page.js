@@ -33,7 +33,7 @@ const CitiesPage = () => {
 
     useEffect(() => {
         filterCitiesData();
-    }, [searchTerm, cities]);
+    }, [searchTerm]);
 
     const fetchCitiesData = () => {
         // TODO: Fetch data from API
