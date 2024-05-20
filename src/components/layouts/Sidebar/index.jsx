@@ -9,12 +9,12 @@ const Sidebar = () => {
   const menuItems = [
     { name: "Dashboard", path: "/" },
     { name: "Users", path: "/users" },
-    { name: "Store", path: "/store" },
     { name: "Categories", path: "/categories" },
     { name: "Products", path: "/products" },
     { name: "Transactions", path: "/transactions" },
     { name: "Cities", path: "/cities" },
     { name: "Courier", path: "/courier" },
+    { name: "Store Profile", path: "/store" },
   ];
 
   return (

@@ -18,7 +18,7 @@ const Navbar = () => {
   };  
 
   return (
-    <header className="fixed top-0 left-0 right-0 md:px-10 px-2 bg-primary z-10 navbar-border w-full shadow-sm">
+    <header className="fixed top-0 left-0 right-0 md:px-10 px-2 bg-white z-10 navbar-border w-full shadow-md">
       <div className="flex md:flex-row flex-col justify-end md:items-center p-4 gap-2">
         <div className="flex md:flex-row flex-col justify-left md:items-center md:gap-8 gap-4">
           <div className="flex sm:flex-row justify-between items-center md:items-center gap-3">

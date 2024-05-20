@@ -20,7 +20,7 @@ export default function RootLayout({ children, session }) {
   return (
     <html lang="en">
       <body
-        className={`${poppins.className} bg-color-primary h-screen flex`}
+        className={`${poppins.className} bg-primary h-screen flex`}
         suppressHydrationWarning={true}
       >
         <SessionProviderWrapper session={session}>
