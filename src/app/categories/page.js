@@ -1,27 +1,20 @@
 "use client";
 import Button from "@/components/ui/Button";
 import { ArrowSquareIn } from "@phosphor-icons/react";
-import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import router from "next/router";
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
-const categoriesData = [
-    { id: 1, name: "Category One", status: "Active" },
-    { id: 2, name: "Category Two", status: "Inactive" },
-    { id: 3, name: "Category Three", status: "Active" },
-    { id: 4, name: "Category Four", status: "Inactive" },
-    { id: 5, name: "Category Five", status: "Active" }
-];
+import { AuthContext } from "@/app/layout";
 
 const CategoriesPage = () => {
-    // GET Session, if !session, redirect to /auth/login
-    const { data: session } = useSession();
+    const { isLoggedIn } = useContext(AuthContext);
     const router = useRouter();
-    if (!session) {
-        router.push("/auth/login");
-    }
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push("/auth/login");
+        }
+    }, [isLoggedIn, router]);
 
     const [searchTerm, setSearchTerm] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
@@ -30,7 +23,8 @@ const CategoriesPage = () => {
     const [categories, setCategories] = useState([]);
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
-    
+    const perPage = 10;
+
     useEffect(() => {
         fetchCategoriesData();
     }, [currentPage]);
@@ -39,9 +33,20 @@ const CategoriesPage = () => {
         filterCategoriesData();
     }, [searchTerm, filterStatus, sortBy, categories]);
 
-    const fetchCategoriesData = () => {
-        setCategories(categoriesData);
-        setTotalPages(1);
+    const fetchCategoriesData = async () => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const categoriesData = response.data.data;
+            setCategories(categoriesData);
+            setTotalPages(Math.ceil(categoriesData.length / perPage));
+        } catch (error) {
+            console.error("Fetch categories error:", error.message || error);
+        }
     };
 
     const filterCategoriesData = () => {
@@ -132,7 +137,7 @@ const CategoriesPage = () => {
                                 <td className="px-4 py-2 w-32 overflow-hidden whitespace-nowrap truncate text-center">{category.id}</td>
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{category.name}</td>
                                 <td className="px-4 py-2 w-60 overflow-hidden whitespace-nowrap truncate text-center">{category.status}</td>
-                                <td className="px-4 py-2  text-center">
+                                <td className="px-4 py-2 text-center">
                                     <Button className="bg-green hover:bg-greenhover text-primary rounded-lg h-10">
                                         <ArrowSquareIn className="w-10 h-5" />
                                     </Button>
