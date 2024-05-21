@@ -5,6 +5,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { AuthContext } from "@/app/layout";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CategoriesPage = () => {
     const { isLoggedIn } = useContext(AuthContext);
@@ -21,7 +23,6 @@ const CategoriesPage = () => {
     const [sortBy, setSortBy] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [categories, setCategories] = useState([]);
-    const [filteredCategories, setFilteredCategories] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const perPage = 10;
 
@@ -30,59 +31,44 @@ const CategoriesPage = () => {
     }, [currentPage]);
 
     useEffect(() => {
-        filterCategoriesData();
+        fetchCategoriesData();
     }, [searchTerm, filterStatus, sortBy, categories]);
 
     const fetchCategoriesData = async () => {
         try {
             const token = sessionStorage.getItem("token");
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories`, {
+                params: {
+                    page: currentPage,
+                    perPage: perPage,
+                    searchTerm: searchTerm,
+                    status: filterStatus,
+                    sortBy: sortBy
+                },
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             const categoriesData = response.data.data;
-            setCategories(categoriesData);
-            setTotalPages(Math.ceil(categoriesData.length / perPage));
+            setCategories(categoriesData.categories);
+            setTotalPages(categoriesData.totalPages);
         } catch (error) {
             console.error("Fetch categories error:", error.message || error);
+            toast.error(error.response?.data?.message || 'No Categories Found');
         }
-    };
-
-    const filterCategoriesData = () => {
-        let filteredData = [...categories];
-
-        if (filterStatus) {
-            filteredData = filteredData.filter(category => category.status === filterStatus);
-        }
-
-        if (searchTerm) {
-            filteredData = filteredData.filter(category =>
-                Object.values(category).some(value =>
-                    String(value).toLowerCase().includes(searchTerm.toLowerCase())
-                )
-            );
-        }
-
-        if (sortBy) {
-            filteredData.sort((a, b) => {
-                if (a[sortBy] < b[sortBy]) return -1;
-                if (a[sortBy] > b[sortBy]) return 1;
-                return 0;
-            });
-        }
-
-        setFilteredCategories(filteredData);
     };
 
     const handleResetAll = () => {
         setSearchTerm("");
         setFilterStatus("");
         setSortBy("");
+        setCurrentPage(1);
+        fetchCategoriesData();
     };
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
+        fetchCategoriesData();
     };
 
     const handleEditCategory = (id) => {
@@ -91,10 +77,11 @@ const CategoriesPage = () => {
 
     const handleCreateCategory = () => {
         router.push('/categories/create');
-    }
+    };
 
     return (
         <div className="p-4 justify-center w-full">
+            <ToastContainer />
             <div className="flex justify-between items-center mb-8 mt-4">
                 <h1 className="text-2xl font-bold">Categories</h1>
                 <button onClick={handleResetAll} className="text-blue-500 hover:underline">
@@ -150,7 +137,7 @@ const CategoriesPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredCategories.map((category) => (
+                        {categories.map((category) => (
                             <tr key={category.id} className="hover:bg-gray-100">
                                 <td className="px-4 py-2 w-32 overflow-hidden whitespace-nowrap truncate text-center">{category.id}</td>
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{category.name}</td>
