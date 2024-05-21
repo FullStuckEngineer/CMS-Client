@@ -60,6 +60,19 @@ const CategoryDetailPage = () => {
         }
     };
 
+    const formatDate = (dateString) => {
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+        return formattedDate;
+    };    
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
@@ -99,7 +112,7 @@ const CategoryDetailPage = () => {
                     <label className="block text-sm font-medium text-gray-700">Created At</label>
                     <input
                         type="text"
-                        value={category.created_at}
+                        value={formatDate(category.created_at)}
                         readOnly
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-lightGrey"
                     />
@@ -108,7 +121,7 @@ const CategoryDetailPage = () => {
                     <label className="block text-sm font-medium text-gray-700">Last Updated At</label>
                     <input
                         type="text"
-                        value={category.update_at}
+                        value={formatDate(category.update_at)}
                         readOnly
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-lightGrey"
                     />

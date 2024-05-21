@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
-import { ArrowSquareIn } from "@phosphor-icons/react";
+import { ArrowSquareIn, ListPlus } from "@phosphor-icons/react";
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -89,12 +89,33 @@ const CategoriesPage = () => {
         router.push(`/categories/${id}`);
     };
 
+    const handleCreateCategory = () => {
+        router.push('/categories/create');
+    }
+
     return (
         <div className="p-4 justify-center w-full">
             <div className="flex justify-between items-center mb-8 mt-4">
                 <h1 className="text-2xl font-bold">Categories</h1>
                 <button onClick={handleResetAll} className="text-blue-500 hover:underline">
                     Reset All
+                </button>
+            </div>
+            <div className="flex mb-2">
+                <input
+                    type="text"
+                    placeholder="Search here..."
+                    className="border p-2 rounded flex-1 mr-2"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button
+                    type="button"
+                    className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 md:w-28 w-36 flex items-center justify-center"
+                    onClick={handleCreateCategory}
+                >
+                    <ListPlus className="mr-2"/>
+                    Create
                 </button>
             </div>
             <div className="flex mb-8">
@@ -107,13 +128,6 @@ const CategoriesPage = () => {
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                 </select>
-                <input
-                    type="text"
-                    placeholder="Search here..."
-                    className="border p-2 rounded flex-1 mr-2"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
                 <select
                     className="border p-2 rounded"
                     value={sortBy}
