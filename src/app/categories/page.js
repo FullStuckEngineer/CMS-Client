@@ -85,6 +85,10 @@ const CategoriesPage = () => {
         setCurrentPage(pageNumber);
     };
 
+    const handleEditCategory = (id) => {
+        router.push(`/categories/${id}`);
+    };
+
     return (
         <div className="p-4 justify-center w-full">
             <div className="flex justify-between items-center mb-8 mt-4">
@@ -138,7 +142,10 @@ const CategoriesPage = () => {
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{category.name}</td>
                                 <td className="px-4 py-2 w-60 overflow-hidden whitespace-nowrap truncate text-center">{category.status}</td>
                                 <td className="px-4 py-2 text-center">
-                                    <Button className="bg-green hover:bg-greenhover text-primary rounded-lg h-10">
+                                    <Button
+                                        className="bg-green hover:bg-greenhover text-primary rounded-lg h-10"
+                                        onClick={() => handleEditCategory(category.id)}
+                                    >
                                         <ArrowSquareIn className="w-10 h-5" />
                                     </Button>
                                 </td>
