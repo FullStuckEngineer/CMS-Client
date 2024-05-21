@@ -54,7 +54,7 @@ const CategoriesPage = () => {
             setTotalPages(categoriesData.totalPages);
         } catch (error) {
             console.error("Fetch categories error:", error.message || error);
-            toast.error(error.response?.data?.message || 'No Categories Found');
+            toast.error('No Categories Found');
         }
     };
 

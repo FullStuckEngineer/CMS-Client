@@ -1,26 +1,22 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-
-const citiesData = [
-    { id: 1, name: "City One" },
-    { id: 2, name: "City Two" },
-    { id: 3, name: "City Three" },
-    { id: 4, name: "City Four" },
-    { id: 5, name: "City Five" },
-    { id: 6, name: "City Six" },
-    { id: 7, name: "City Seven" },
-    { id: 8, name: "City Eight" },
-    { id: 9, name: "City Nine" },
-    { id: 10, name: "City Ten" },
-    { id: 11, name: "City Eleven" },
-    { id: 12, name: "City Twelve" },
-    { id: 13, name: "City Thirteen" },
-    { id: 14, name: "City Fourteen" },
-    { id: 15, name: "City Fifteen" }
-]
+import { AuthContext } from "@/app/layout";
+import { ArrowLineLeft, ArrowLineRight } from "@phosphor-icons/react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CitiesPage = () => {
+    const { isLoggedIn } = useContext(AuthContext);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push("/auth/login");
+        }
+    }, [isLoggedIn, router]);
+
     const [cities, setCities] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -29,40 +25,28 @@ const CitiesPage = () => {
 
     useEffect(() => {
         fetchCitiesData();
-    }, [currentPage]);
-
-    useEffect(() => {
-        filterCitiesData();
-    }, [searchTerm]);
+    }, [currentPage, searchTerm]);
 
     const fetchCitiesData = async () => {
         try {
             const token = sessionStorage.getItem("token");
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/cities`, {
+                params: {
+                    page: currentPage,
+                    perPage: citiesPerPage,
+                    searchTerm: searchTerm
+                },
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             const citiesData = response.data.data;
-            setCities(citiesData);
-            setTotalPages(Math.ceil(citiesData.length / citiesPerPage));
+            setCities(citiesData.cities);
+            setTotalPages(citiesData.totalPages);
         } catch (error) {
-            console.error("Fetch categories error:", error.message || error);
+            console.error("Fetch cities error:", error.message || error);
+            toast.error('No Cities Found');
         }
-    };
-
-    const filterCitiesData = () => {
-        let filteredData = [...citiesData];
-
-        if (searchTerm) {
-            filteredData = filteredData.filter(city =>
-                city.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
-
-        setTotalPages(Math.ceil(filteredData.length / citiesPerPage));
-
-        setCities(filteredData);
     };
 
     const paginate = (pageNumber) => {
@@ -72,14 +56,38 @@ const CitiesPage = () => {
     const handleResetAll = () => {
         setSearchTerm("");
         setCurrentPage(1);
+        fetchCitiesData();
     };
 
-    const startIndex = (currentPage - 1) * citiesPerPage;
-    const endIndex = startIndex + citiesPerPage;
-    const currentCities = cities.slice(startIndex, endIndex);
+    const renderPageNumbers = () => {
+        const pageNumbers = [];
+        const maxPageNumbersToShow = 3;
+        let startPage = Math.max(currentPage - Math.floor(maxPageNumbersToShow / 2), 1);
+        let endPage = startPage + maxPageNumbersToShow - 1;
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(endPage - maxPageNumbersToShow + 1, 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageNumbers.push(
+                <button
+                    key={i}
+                    onClick={() => paginate(i)}
+                    className={`mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 ${currentPage === i ? 'font-bold' : ''}`}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        return pageNumbers;
+    };
 
     return (
         <div className="p-4 justify-center w-full">
+            <ToastContainer />
             <div className="flex justify-between items-center mb-8 mt-4">
                 <h1 className="text-2xl font-bold">Cities</h1>
                 <button onClick={handleResetAll} className="text-blue-500 hover:underline">
@@ -104,7 +112,7 @@ const CitiesPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentCities.map((city) => (
+                        {cities.map((city) => (
                             <tr key={city.id} className="hover:bg-gray-100">
                                 <td className="px-4 py-2 w-32 overflow-hidden whitespace-nowrap truncate text-center">{city.id}</td>
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{city.name}</td>
@@ -113,15 +121,23 @@ const CitiesPage = () => {
                     </tbody>
                 </table>
                 <div className="flex justify-center mt-4">
-                    {Array.from({ length: totalPages }, (_, index) => index + 1).map(number => (
+                    {currentPage > 1 && (
                         <button
-                            key={number}
-                            onClick={() => paginate(number)}
-                            className={`mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 ${currentPage === number ? 'font-bold' : ''}`}
+                            onClick={() => paginate(1)}
+                            className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
                         >
-                            {number}
+                            <ArrowLineLeft/>
                         </button>
-                    ))}
+                    )}
+                    {renderPageNumbers()}
+                    {currentPage < totalPages && (
+                        <button
+                            onClick={() => paginate(totalPages)}
+                            className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                        >
+                            <ArrowLineRight/>
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
