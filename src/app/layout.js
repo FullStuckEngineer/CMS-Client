@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect, createContext } from "react";
+import { useRouter } from "next/navigation";
 import { Poppins } from "next/font/google";
 import Navbar from "@/components/layouts/Navbar";
 import Sidebar from "@/components/layouts/Sidebar";
@@ -12,25 +15,38 @@ const poppins = Poppins({
   ],
 });
 
-export const metadata = {
-  title: 'BabyBoo',
-};
+export const AuthContext = createContext();
 
 export default function RootLayout({ children, session }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
   return (
     <html lang="en">
+      <head>
+        <title>BabyBoo</title>
+      </head>
       <body
         className={`${poppins.className} bg-primary h-screen flex`}
         suppressHydrationWarning={true}
       >
         <SessionProviderWrapper session={session}>
-          <div className="flex-2 ml-64 w-full">
-            <Sidebar />
-            <Navbar />
-            <main className="p-4 mt-16 w-full">
-              {children}
-            </main>
-          </div>
+          <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+            <div className="flex w-full h-full">
+              {isLoggedIn && <Sidebar />}
+              <div className={`flex-1 ${isLoggedIn ? 'ml-64' : ''}`}>
+                <Navbar />
+                <main className="p-4 mt-16">
+                  {children}
+                </main>
+              </div>
+            </div>
+          </AuthContext.Provider>
         </SessionProviderWrapper>
       </body>
     </html>

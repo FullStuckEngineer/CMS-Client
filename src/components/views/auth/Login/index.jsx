@@ -1,35 +1,40 @@
 "use client";
-
-import React, { useState } from "react";
-import Link from "next/link";
+import React, { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { AuthContext } from "@/app/layout";
 
 const LoginView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { setIsLoggedIn } = useContext(AuthContext);
 
   const handleSubmit = async (event) => {
-    console.log("event", event);
     event.preventDefault();
     setIsLoading(true);
     setError("");
     const form = event.target;
+    const data = {
+      email: form.email.value,
+      password: form.password.value,
+    };
     try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: form.email.value,
-        role: form.role.value,
-        password: form.password.value,
-        callbackUrl: '/',
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
-      if (!res?.error) {
+      const result = await response.json();
+      if (response.ok) {
         setIsLoading(false);
         form.reset();
+        sessionStorage.setItem("token", result.accessToken);
+        setIsLoggedIn(true);
         router.push('/');
       } else {
         setIsLoading(false);

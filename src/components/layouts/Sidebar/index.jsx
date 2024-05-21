@@ -7,13 +7,13 @@ const Sidebar = () => {
   const router = useRouter();
 
   const menuItems = [
-    { name: "Dashboard", path: "/" },
+    { name: "Dashboard", path: "/dashboard" },
     { name: "Users", path: "/users" },
     { name: "Categories", path: "/categories" },
     { name: "Products", path: "/products" },
     { name: "Transactions", path: "/transactions" },
     { name: "Cities", path: "/cities" },
-    { name: "Courier", path: "/courier" },
+    { name: "Courier", path: "/couriers" },
     { name: "Store Profile", path: "/store" },
   ];
 

@@ -10,7 +10,7 @@ import AuthLayout from "@/components/layouts/AuthLayout";
 const RegisterView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  // const { push } = useRouter();
+  const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -21,11 +21,12 @@ const RegisterView = () => {
       name: form.name.value,
       email: form.email.value,
       password: form.password.value,
-      role: form.role.value,
+      role: "admin",
     };
 
     try {
-      const result = await fetch("/api/user/register", {
+      console.log("Base URL API", process.env.NEXT_PUBLIC_BASE_URL_API);
+      const result = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_API}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +36,7 @@ const RegisterView = () => {
 
       if (result.ok) {
         form.reset();
-        // push("/auth/login");
+        router.push("/auth/login");
       } else {
         setIsLoading(false);
         setError("Email is already registered");
@@ -63,7 +64,6 @@ const RegisterView = () => {
           type="password"
           placeholder="Password"
         />
-        <Input label="Role" name="role" type="text" placeholder="Role" />
 
         <Button
           type="submit"
