@@ -1,48 +1,41 @@
 "use client";
+import React, { useContext } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import React from "react";
 import Image from "next/image";
 import profilPlaceholder from "@/assets/images/profile-placeholder.jpg";
 import { SignOut } from "@phosphor-icons/react";
-
-const UserData = {
-  user: {
-    name: "John Doe",
-    image: profilPlaceholder
-  }
-};
+import { AuthContext } from "@/app/layout";
 
 const Navbar = () => {
-  const { data: session } = useSession();
-  
-  const data = {
-    user: {
-      name: "John Doe",
-      image: profilPlaceholder
-    }
-  };  
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const router = useRouter();
+
+  const handleSignOut = () => {
+    sessionStorage.removeItem("token");
+    setIsLoggedIn(false);
+    router.push("/auth/login");
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 md:px-10 px-2 bg-white z-10 navbar-border w-full shadow-md">
-      {session ? (
+      {isLoggedIn ? (
         <div className="flex md:flex-row flex-col justify-end md:items-center p-4 gap-2">
           <div className="flex md:flex-row flex-col justify-left md:items-center md:gap-8 gap-4">
             <div className="flex sm:flex-row justify-between items-center md:items-center gap-3">
               <div className="flex items-center gap-3">
                 <Image
-                  src={UserData.user.image}
-                  alt={UserData.user.name}
+                  src={profilPlaceholder}
+                  alt="User"
                   className="rounded-full w-10 h-10"
                   width={40}
                   height={40}
                 />
-                <span className="font-bold text-green">{UserData.user.name}</span>
+                <span className="font-bold text-green">John Doe</span>
               </div>
               <Button
-                onClick={signOut}
-                h
+                onClick={handleSignOut}
                 className="text-green rounded-lg h-10"
               >
                 <SignOut className="w-10 h-5" />
