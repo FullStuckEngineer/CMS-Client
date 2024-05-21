@@ -13,13 +13,8 @@ export default function HomePage() {
     const token = sessionStorage.getItem("token");
     if (!token) {
       router.push("/auth/login");
+    } else {
+      router.push("/dashboard");
     }
   }, [router]);
-
-  return (
-    <div>
-      <h1>Welcome to the Home Page</h1>
-      <CardProduct />
-    </div>
-  );
 }
