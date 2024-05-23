@@ -4,7 +4,6 @@ dotenv.config();
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CardProduct } from "@/components/ui/CardProduct";
 
 export default function HomePage() {
   const router = useRouter();
