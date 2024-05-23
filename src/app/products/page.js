@@ -116,8 +116,8 @@ const ProductPage = () => {
         setCurrentPage(pageNumber);
     };
 
-    const handleEditProduct = (id) => {
-        router.push(`/products/${id}`);
+    const handleEditProduct = (slug) => {
+        router.push(`/products/${slug}`);
     };
 
     const handleCreateProduct = () => {
@@ -249,7 +249,7 @@ const ProductPage = () => {
                                 <td className="px-4 py-2 text-center">
                                     <Button
                                         className="bg-green hover:bg-greenhover text-primary rounded-lg h-10"
-                                        onClick={() => handleEditProduct(product.id)}
+                                        onClick={() => handleEditProduct(product.slug)}
                                     >
                                         <ArrowSquareIn className="w-10 h-5" />
                                     </Button>
