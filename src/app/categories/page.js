@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
-import { ArrowSquareIn, ListPlus } from "@phosphor-icons/react";
+import { ArrowSquareIn, ListPlus, ArrowLineLeft, ArrowLineRight } from "@phosphor-icons/react";
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -54,7 +54,7 @@ const CategoriesPage = () => {
             setTotalPages(categoriesData.totalPages);
         } catch (error) {
             console.error("Fetch categories error:", error.message || error);
-            toast.error(error.response?.data?.message || 'No Categories Found');
+            toast.error('No Categories Found');
         }
     };
 
@@ -78,6 +78,33 @@ const CategoriesPage = () => {
     const handleCreateCategory = () => {
         router.push('/categories/create');
     };
+
+    const renderPageNumbers = () => {
+        const pageNumbers = [];
+        const maxPageNumbersToShow = 3;
+        let startPage = Math.max(currentPage - Math.floor(maxPageNumbersToShow / 2), 1);
+        let endPage = startPage + maxPageNumbersToShow - 1;
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(endPage - maxPageNumbersToShow + 1, 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageNumbers.push(
+                <button
+                    key={i}
+                    onClick={() => paginate(i)}
+                    className={`mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 ${currentPage === i ? 'font-bold' : ''}`}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        return pageNumbers;
+    };
+
 
     return (
         <div className="p-4 justify-center w-full">
@@ -155,15 +182,23 @@ const CategoriesPage = () => {
                     </tbody>
                 </table>
                 <div className="flex justify-center mt-4">
-                    {Array.from({ length: totalPages }, (_, index) => index + 1).map(number => (
+                    {currentPage > 1 && (
                         <button
-                            key={number}
-                            onClick={() => paginate(number)}
-                            className={`mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 ${currentPage === number ? 'font-bold' : ''}`}
+                            onClick={() => paginate(1)}
+                            className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
                         >
-                            {number}
+                            <ArrowLineLeft/>
                         </button>
-                    ))}
+                    )}
+                    {renderPageNumbers()}
+                    {currentPage < totalPages && (
+                        <button
+                            onClick={() => paginate(totalPages)}
+                            className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                        >
+                            <ArrowLineRight/>
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
