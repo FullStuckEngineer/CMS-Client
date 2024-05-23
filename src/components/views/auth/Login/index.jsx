@@ -11,6 +11,7 @@ const LoginView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const [successMessage, setSuccessMessage] = useState("");
   const { setIsLoggedIn } = useContext(AuthContext);
 
   const handleSubmit = async (event) => {
