@@ -31,7 +31,18 @@ const AddressCreatePage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setCities(response.data.data.cities.map(city => ({ value: city.id, label: city.name })));
+
+            const pages = response.data.data.totalPages;
+            for (let i = 2; i <= pages; i++) {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/cities?page=${i}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                response.data.data.cities = response.data.data.cities.concat(res.data.data.cities);
+            }
+
+            setCities(response.data.data.cities.map(city => ({ value: city.id, label: `${city.id} : ${city.name}` })));
         } catch (error) {
             console.error("Fetch cities error:", error.message || error);
         }
@@ -45,7 +56,17 @@ const AddressCreatePage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setUsers(response.data.data.users.map(user => ({ value: user.id, label: user.name })));
+
+            const pages = response.data.data.totalPages;
+            for (let i = 2; i <= pages; i++) {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users?page=${i}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                response.data.data.users = response.data.data.users.concat(res.data.data.users);
+            }
+            setUsers(response.data.data.users.map(user => ({ value: user.id, label: `${user.id} : ${user.name}`})));
         } catch (error) {
             console.error("Fetch users error:", error.message || error);
         }
@@ -60,10 +81,10 @@ const AddressCreatePage = () => {
                 receiver_name: receiverName,
                 receiver_phone: receiverPhone,
                 detail_address: detailAddress,
-                city_id: cityId.value,
+                city_id: parseInt(cityId.value),
                 province,
-                postal_code: postalCode,
-                user_id: userId.value
+                postal_code: parseInt(postalCode),
+                user_id: parseInt(userId.value)
             };
             await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/addresses`, newAddress, {
                 headers: {
