@@ -42,9 +42,10 @@ const RegisterView = () => {
 
       if (result.ok) {
         form.reset();
-        setSuccessMessage(
-          result.data.message || "Login successful. Redirecting..."
-        );
+        
+        const successMessage = result.data && result.data.message ? result.data.message : "Register successful! Please login to continue";
+        
+        setSuccessMessage(successMessage);
         router.push("/auth/login");
       } else {
         setIsLoading(false);
