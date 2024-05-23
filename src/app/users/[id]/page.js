@@ -62,7 +62,7 @@ const UserDetailPage = () => {
             const userData = {
                 name: updatedUser.name,
                 email: updatedUser.email,
-                role: updatedUser.role,
+                role: updatedUser.role.toLowerCase(),
                 phone_number: updatedUser.phone_number,
             };
 
@@ -144,12 +144,14 @@ const UserDetailPage = () => {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-darkGrey">Role</label>
-                    <input
-                        type="text"
+                    <select
                         value={user.role}
                         onChange={(e) => setUser({ ...user, role: e.target.value })}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
-                    />
+                    >
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-darkGrey">Phone Number</label>
