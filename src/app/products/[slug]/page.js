@@ -1,13 +1,22 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter, useParams } from 'next/navigation';
+import { AuthContext } from "@/app/layout";
 import axios from 'axios';
 import Select from 'react-select';
 import Image from "next/image";
 import profilPlaceholder from "@/assets/images/profile-placeholder.jpg";
 
 const ProductDetailPage = () => {
+    const { isLoggedIn } = useContext(AuthContext);
     const router = useRouter();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push("/auth/login");
+        }
+    }, [isLoggedIn, router]);
+
     const { slug } = useParams();
     const [product, setProduct] = useState(null);
     const [categories, setCategories] = useState([]);
@@ -40,7 +49,6 @@ const ProductDetailPage = () => {
                 }
             });
             const productData = response.data.data;
-            productData.description = hexToString(productData.description);
 
             await fetchImage(`${productData.photo}`);
 
@@ -50,19 +58,6 @@ const ProductDetailPage = () => {
             setError(error.message || "Error fetching product data");
             setLoading(false);
         }
-    };
-
-    const hexToString = (hex) => {
-        const hexString = hex.replace(/^\\x/, '');
-        let str = '';
-        for (let i = 0; i < hexString.length; i += 2) {
-            str += String.fromCharCode(parseInt(hexString.substr(i, 2), 16));
-        }
-        return str;
-    };
-
-    const stringToHex = (str) => {
-        return str.split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
     };
 
     const fetchImage = async (path) => {
@@ -86,7 +81,13 @@ const ProductDetailPage = () => {
     const fetchCategories = async () => {
         try {
             const token = sessionStorage.getItem("token");
+
+            let where = {};
+            if (product.status === 'Active') {
+                where.status = 'Active';
+            }
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories`, {
+                where,
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -167,7 +168,6 @@ const ProductDetailPage = () => {
 
         try {
             const token = sessionStorage.getItem("token");
-            updatedProduct.description = stringToHex(updatedProduct.description);
             await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/products/${product.id}`, updatedProduct, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -383,13 +383,15 @@ const ProductDetailPage = () => {
                     >
                         Save
                     </button>
-                    <button
-                        type="button"
-                        className="bg-red hover:bg-redhover text-white rounded-lg h-10 md:w-32 w-40"
-                        onClick={deleteProduct}
-                    >
-                        Delete
-                    </button>
+                    {product.status === 'Active' &&
+                        <button
+                            type="button"
+                            className="bg-red hover:bg-redhover text-white rounded-lg h-10 md:w-32 w-40"
+                            onClick={deleteProduct}
+                        >
+                            Delete
+                        </button>
+                    }
                     <button
                         type="button"
                         className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"

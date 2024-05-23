@@ -4,177 +4,196 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Select from 'react-select';
 
-const AddressCreatePage = () => {
+const CreateProductPage = () => {
     const router = useRouter();
-    const [receiverName, setReceiverName] = useState('');
-    const [receiverPhone, setReceiverPhone] = useState('');
-    const [detailAddress, setDetailAddress] = useState('');
-    const [cityId, setCityId] = useState('');
-    const [province, setProvince] = useState('');
-    const [postalCode, setPostalCode] = useState('');
-    const [userId, setUserId] = useState('');
-    const [cities, setCities] = useState([]);
-    const [users, setUsers] = useState([]);
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState('');
+    const [weight, setWeight] = useState('');
+    const [categoryId, setCategoryId] = useState('');
+    const [stock, setStock] = useState('');
+    const [sku, setSku] = useState('');
+    const [description, setDescription] = useState('');
+    const [keywords, setKeywords] = useState('');
+    const [imageFile, setImageFile] = useState(null);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchCities();
-        fetchUsers();
+        fetchCategories();
     }, []);
 
-    const fetchCities = async () => {
+    const fetchCategories = async () => {
         try {
             const token = sessionStorage.getItem("token");
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/cities`, {
+            let categories = [];
+            
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories`, {
+                params: {
+                    status: "Active"
+                },
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-
+    
+            categories = response.data.data.categories;
             const pages = response.data.data.totalPages;
+    
             for (let i = 2; i <= pages; i++) {
-                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/cities?page=${i}`, {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories`, {
+                    params: {
+                        status: "Active",
+                        page: i
+                    },
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                response.data.data.cities = response.data.data.cities.concat(res.data.data.cities);
+                categories = categories.concat(res.data.data.categories);
             }
-
-            setCities(response.data.data.cities.map(city => ({ value: city.id, label: `${city.id} : ${city.name}` })));
+    
+            setCategories(categories.map(category => ({ value: category.id, label: `${category.id} : ${category.name}` })));
         } catch (error) {
-            console.error("Fetch cities error:", error.message || error);
+            console.error("Fetch categories error:", error.message || error);
         }
-    };
+    };    
 
-    const fetchUsers = async () => {
-        try {
-            const token = sessionStorage.getItem("token");
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            const pages = response.data.data.totalPages;
-            for (let i = 2; i <= pages; i++) {
-                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users?page=${i}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                response.data.data.users = response.data.data.users.concat(res.data.data.users);
-            }
-            setUsers(response.data.data.users.map(user => ({ value: user.id, label: `${user.id} : ${user.name}`})));
-        } catch (error) {
-            console.error("Fetch users error:", error.message || error);
-        }
-    };
-
-    const handleCreateAddress = async () => {
+    const handleCreateProduct = async () => {
         setLoading(true);
         setError(null);
         try {
             const token = sessionStorage.getItem("token");
-            const newAddress = {
-                receiver_name: receiverName,
-                receiver_phone: receiverPhone,
-                detail_address: detailAddress,
-                city_id: parseInt(cityId.value),
-                province,
-                postal_code: parseInt(postalCode),
-                user_id: parseInt(userId.value)
+            const newProduct = {
+                name,
+                price: parseFloat(price),
+                weight: parseFloat(weight),
+                category_id: parseInt(categoryId.value),
+                stock: parseInt(stock),
+                sku,
+                description,
+                keywords
             };
-            await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/addresses`, newAddress, {
+
+            const productResponse = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/products`, newProduct, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/addresses');
+
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append('image', imageFile);
+                formData.append('id', productResponse.data.data.id);
+                await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/products/uploads`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+            }
+
+            router.push('/products');
         } catch (error) {
-            setError(error.message || "Error creating address");
+            setError(error.message || "Error creating product");
             setLoading(false);
         }
     };
 
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
+    };
+
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4 justify-center flex">Create New Address</h1>
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleCreateAddress(); }}>
+            <h1 className="text-2xl font-bold mb-4 justify-center flex">Create New Product</h1>
+            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleCreateProduct(); }}>
                 {error && <div className="text-red mb-4">{error}</div>}
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Receiver Name</label>
+                    <label className="block text-sm font-medium text-darkGrey">Name</label>
                     <input
                         type="text"
-                        value={receiverName}
-                        onChange={(e) => setReceiverName(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Receiver Phone</label>
+                    <label className="block text-sm font-medium text-darkGrey">Price</label>
                     <input
-                        type="text"
-                        value={receiverPhone}
-                        onChange={(e) => setReceiverPhone(e.target.value)}
+                        type="number"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Detail Address</label>
+                    <label className="block text-sm font-medium text-darkGrey">Weight</label>
                     <input
-                        type="text"
-                        value={detailAddress}
-                        onChange={(e) => setDetailAddress(e.target.value)}
+                        type="number"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">City</label>
+                    <label className="block text-sm font-medium text-darkGrey">Category</label>
                     <Select
-                        value={cityId}
-                        onChange={setCityId}
-                        options={cities}
+                        value={categoryId}
+                        onChange={setCategoryId}
+                        options={categories}
                         className="mt-1 block w-full"
-                        placeholder="Select City"
+                        placeholder="Select Category"
                         isSearchable
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Province</label>
+                    <label className="block text-sm font-medium text-darkGrey">Stock</label>
                     <input
-                        type="text"
-                        value={province}
-                        onChange={(e) => setProvince(e.target.value)}
+                        type="number"
+                        value={stock}
+                        onChange={(e) => setStock(e.target.value)}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Postal Code</label>
+                    <label className="block text-sm font-medium text-darkGrey">SKU</label>
                     <input
                         type="text"
-                        value={postalCode}
-                        onChange={(e) => setPostalCode(e.target.value)}
+                        value={sku}
+                        onChange={(e) => setSku(e.target.value)}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">User</label>
-                    <Select
-                        value={userId}
-                        onChange={setUserId}
-                        options={users}
-                        className="mt-1 block w-full"
-                        placeholder="Select User"
-                        isSearchable
-                        required
+                    <label className="block text-sm font-medium text-darkGrey">Description</label>
+                    <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-darkGrey">Keywords</label>
+                    <input
+                        type="text"
+                        value={keywords}
+                        onChange={(e) => setKeywords(e.target.value)}
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-darkGrey">Image</label>
+                    <input
+                        type="file"
+                        onChange={handleImageChange}
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
@@ -188,7 +207,7 @@ const AddressCreatePage = () => {
                     <button
                         type="button"
                         className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"
-                        onClick={() => router.push('/addresses')}
+                        onClick={() => router.push('/products')}
                     >
                         Cancel
                     </button>
@@ -198,4 +217,4 @@ const AddressCreatePage = () => {
     );
 };
 
-export default AddressCreatePage;
+export default CreateProductPage;
