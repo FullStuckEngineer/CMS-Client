@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import AuthLayout from "@/components/layouts/AuthLayout";
+import { CheckCircle, XCircle } from "@phosphor-icons/react";
 
 const RegisterView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (event) => {

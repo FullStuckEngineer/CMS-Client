@@ -35,10 +35,20 @@ const CitiesPage = () => {
         filterCitiesData();
     }, [searchTerm]);
 
-    const fetchCitiesData = () => {
-        // TODO: Fetch data from API
-        setCities(citiesData);
-        setTotalPages(Math.ceil(citiesData.length / citiesPerPage));
+    const fetchCitiesData = async () => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/cities`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const citiesData = response.data.data;
+            setCities(citiesData);
+            setTotalPages(Math.ceil(citiesData.length / citiesPerPage));
+        } catch (error) {
+            console.error("Fetch categories error:", error.message || error);
+        }
     };
 
     const filterCitiesData = () => {
