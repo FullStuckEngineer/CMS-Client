@@ -13,6 +13,12 @@ const AddressDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [nameError, setNameError] = useState('');
+    const [phoneError, setPhoneError] = useState('');
+    const [detailAddressError, setDetailAddressError] = useState('');
+    const [cityError, setCityError] = useState('');
+    const [provinceError, setProvinceError] = useState('');
+    const [postalCodeError, setPostalCodeError] = useState('');
+    const [userError, setUserError] = useState('');
 
     useEffect(() => {
         if (id) {
@@ -46,7 +52,18 @@ const AddressDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setCities(response.data.data.cities.map(city => ({ value: city.id, label: city.name })));
+
+            const pages = response.data.data.totalPages;
+            for (let i = 2; i <= pages; i++) {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/cities?page=${i}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                response.data.data.cities = response.data.data.cities.concat(res.data.data.cities);
+            }
+
+            setCities(response.data.data.cities.map(city => ({ value: city.id, label: `${city.id} : ${city.name}` })));
         } catch (error) {
             console.error("Fetch cities error:", error.message || error);
         }
@@ -60,7 +77,17 @@ const AddressDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setUsers(response.data.data.users.map(user => ({ value: user.id, label: user.name })));
+
+            const pages = response.data.data.totalPages;
+            for (let i = 2; i <= pages; i++) {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users?page=${i}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                response.data.data.users = response.data.data.users.concat(res.data.data.users);
+            }
+            setUsers(response.data.data.users.map(user => ({ value: user.id, label: `${user.id} : ${user.name}`})));
         } catch (error) {
             console.error("Fetch users error:", error.message || error);
         }
@@ -72,6 +99,36 @@ const AddressDetailPage = () => {
             return;
         } else {
             setNameError("");
+        }
+
+        if (!updatedAddress.receiver_phone) {
+            setPhoneError("Receiver phone cannot be empty");
+            return;
+        }
+
+        if (!updatedAddress.detail_address) {
+            setDetailAddressError("Detail address cannot be empty");
+            return;
+        }
+
+        if (!updatedAddress.city_id) {
+            setCityError("City cannot be empty");
+            return;
+        }
+
+        if (!updatedAddress.province) {
+            setProvinceError("Province cannot be empty");
+            return;
+        }
+
+        if (!updatedAddress.postal_code) {
+            setPostalCodeError("Postal code cannot be empty");
+            return;
+        }
+
+        if (!updatedAddress.user_id) {
+            setUserError("User cannot be empty");
+            return;
         }
 
         try {
@@ -131,6 +188,18 @@ const AddressDetailPage = () => {
                     />
                 </div>
                 <div>
+                    <label className="block text-sm font-medium text-darkGrey">User</label>
+                    <Select
+                        value={users.find(user => user.value === address.user_id)}
+                        onChange={(selected) => setAddress({ ...address, user_id: selected.value })}
+                        options={users}
+                        className="mt-1 block w-full"
+                        placeholder="Select User"
+                        isSearchable
+                        required
+                    />
+                </div>
+                <div>
                     <label className="block text-sm font-medium text-darkGrey">Receiver Name</label>
                     <input
                         type="text"
@@ -150,6 +219,7 @@ const AddressDetailPage = () => {
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                         required
                     />
+                    {phoneError && <p className="text-red text-sm mt-1">{phoneError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-darkGrey">Detail Address</label>
@@ -160,6 +230,7 @@ const AddressDetailPage = () => {
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                         required
                     />
+                    {detailAddressError && <p className="text-red text-sm mt-1">{detailAddressError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-darkGrey">City</label>
@@ -172,6 +243,7 @@ const AddressDetailPage = () => {
                         isSearchable
                         required
                     />
+                    {cityError && <p className="text-red text-sm mt-1">{cityError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-darkGrey">Province</label>
@@ -182,6 +254,7 @@ const AddressDetailPage = () => {
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                         required
                     />
+                    {provinceError && <p className="text-red text-sm mt-1">{provinceError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-darkGrey">Postal Code</label>
@@ -192,17 +265,24 @@ const AddressDetailPage = () => {
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                         required
                     />
+                    {postalCodeError && <p className="text-red text-sm mt-1">{postalCodeError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">User</label>
-                    <Select
-                        value={users.find(user => user.value === address.user_id)}
-                        onChange={(selected) => setAddress({ ...address, user_id: selected.value })}
-                        options={users}
-                        className="mt-1 block w-full"
-                        placeholder="Select User"
-                        isSearchable
-                        required
+                    <label className="block text-sm font-medium text-darkGrey">Created At</label>
+                    <input
+                        type="text"
+                        value={formatDate(address.created_at)}
+                        readOnly
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-darkGrey">Last Updated At</label>
+                    <input
+                        type="text"
+                        value={formatDate(address.update_at)}
+                        readOnly
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
