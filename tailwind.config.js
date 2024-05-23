@@ -22,6 +22,7 @@ module.exports = {
       redhover: "#E03131",
       green: "#00A19F",
       greenhover: "#00BDBB",
+      lightGreen: "#00D1C1",
       grey: "#A9B0BF",
       dark: "#000000",
       lightGrey: "#E5E7EB",

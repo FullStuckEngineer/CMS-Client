@@ -75,10 +75,6 @@ const UserPage = () => {
         router.push(`/users/${id}`);
     };
 
-    const handleCreateUser = () => {
-        router.push('/users/create');
-    };
-
     const renderPageNumbers = () => {
         const pageNumbers = [];
         const maxPageNumbersToShow = 3;
@@ -95,7 +91,7 @@ const UserPage = () => {
                 <button
                     key={i}
                     onClick={() => paginate(i)}
-                    className={`mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 ${currentPage === i ? 'font-bold' : ''}`}
+                    className={`mx-1 px-3 py-1 text-darkGrey rounded hover:bg-lightGreen ${currentPage === i ? 'font-bold' : ''}`}
                 >
                     {i}
                 </button>
@@ -123,14 +119,6 @@ const UserPage = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button
-                    type="button"
-                    className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 md:w-28 w-36 flex items-center justify-center"
-                    onClick={handleCreateUser}
-                >
-                    <ListPlus className="mr-2"/>
-                    Create
-                </button>
             </div>
             <div className="flex mb-8">
                 <select
@@ -167,7 +155,7 @@ const UserPage = () => {
                     </thead>
                     <tbody>
                         {users.map((user) => (
-                            <tr key={user.id} className="hover:bg-gray-100">
+                            <tr key={user.id} className="hover:bg-grey-100">
                                 <td className="px-4 py-2 w-32 overflow-hidden whitespace-nowrap truncate text-center">{user.id}</td>
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{user.name}</td>
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{user.email}</td>
@@ -188,7 +176,7 @@ const UserPage = () => {
                     {currentPage > 1 && (
                         <button
                             onClick={() => paginate(1)}
-                            className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                            className="mx-1 px-3 py-1 text-darkGrey rounded hover:bg-lightGreen"
                         >
                             <ArrowLineLeft/>
                         </button>
@@ -197,7 +185,7 @@ const UserPage = () => {
                     {currentPage < totalPages && (
                         <button
                             onClick={() => paginate(totalPages)}
-                            className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                            className="mx-1 px-3 py-1 text-darkGrey rounded hover:bg-lightGreen"
                         >
                             <ArrowLineRight/>
                         </button>

@@ -9,6 +9,7 @@ const CategoryDetailPage = () => {
     const [category, setCategory] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [nameError, setNameError] = useState('');
 
     useEffect(() => {
         if (id) {
@@ -33,6 +34,13 @@ const CategoryDetailPage = () => {
     };
 
     const saveCategory = async (updatedCategory) => {
+        if (!updatedCategory.name) {
+            setNameError("Name cannot be empty");
+            return;
+        } else {
+            setNameError("");
+        }
+
         try {
             const token = sessionStorage.getItem("token");
             await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories/${id}`, updatedCategory, {
@@ -71,59 +79,60 @@ const CategoryDetailPage = () => {
         };
         const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
         return formattedDate;
-    };    
+    };
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
-    console.log("Category Details", category);
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Category Details</h1>
             <form className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">ID</label>
+                    <label className="block text-sm font-medium text-darkGrey">ID</label>
                     <input
                         type="text"
                         value={category.id}
                         readOnly
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Name</label>
+                    <label className="block text-sm font-medium text-darkGrey">Name</label>
                     <input
                         type="text"
                         value={category.name}
                         onChange={(e) => setCategory({ ...category, name: e.target.value })}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        required
                     />
+                    {nameError && <p className="text-red text-sm mt-1">{nameError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Status</label>
+                    <label className="block text-sm font-medium text-darkGrey">Status</label>
                     <input
                         type="text"
                         value={category.status}
                         readOnly
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Created At</label>
+                    <label className="block text-sm font-medium text-darkGrey">Created At</label>
                     <input
                         type="text"
                         value={formatDate(category.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Last Updated At</label>
+                    <label className="block text-sm font-medium text-darkGrey">Last Updated At</label>
                     <input
                         type="text"
                         value={formatDate(category.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
@@ -134,7 +143,7 @@ const CategoryDetailPage = () => {
                     >
                         Save
                     </button>
-                    {category.status == "Active" &&
+                    {category.status === "Active" &&
                         <button
                             type="button"
                             className="bg-red hover:bg-redhover text-white rounded-lg h-10 md:w-32 w-40"
