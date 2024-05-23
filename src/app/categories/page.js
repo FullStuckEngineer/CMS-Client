@@ -95,7 +95,7 @@ const CategoriesPage = () => {
                 <button
                     key={i}
                     onClick={() => paginate(i)}
-                    className={`mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 ${currentPage === i ? 'font-bold' : ''}`}
+                    className={`mx-1 px-3 py-1 bg-primary text-dark rounded hover:bg-lightGreen ${currentPage === i ? 'font-bold' : ''}`}
                 >
                     {i}
                 </button>
@@ -165,7 +165,7 @@ const CategoriesPage = () => {
                     </thead>
                     <tbody>
                         {categories.map((category) => (
-                            <tr key={category.id} className="hover:bg-gray-100">
+                            <tr key={category.id} className="hover:bg-grey-100">
                                 <td className="px-4 py-2 w-32 overflow-hidden whitespace-nowrap truncate text-center">{category.id}</td>
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{category.name}</td>
                                 <td className="px-4 py-2 w-60 overflow-hidden whitespace-nowrap truncate text-center">{category.status}</td>
@@ -185,7 +185,7 @@ const CategoriesPage = () => {
                     {currentPage > 1 && (
                         <button
                             onClick={() => paginate(1)}
-                            className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                            className="mx-1 px-3 py-1 text-darkGrey rounded hover:bg-lightGreen"
                         >
                             <ArrowLineLeft/>
                         </button>
@@ -194,7 +194,7 @@ const CategoriesPage = () => {
                     {currentPage < totalPages && (
                         <button
                             onClick={() => paginate(totalPages)}
-                            className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                            className="mx-1 px-3 py-1 text-darkGrey rounded hover:bg-lightGreen"
                         >
                             <ArrowLineRight/>
                         </button>

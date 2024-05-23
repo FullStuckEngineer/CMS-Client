@@ -9,6 +9,7 @@ const Sidebar = () => {
   const menuItems = [
     { name: "Dashboard", path: "/dashboard" },
     { name: "Users", path: "/users" },
+    { name: "Addresses", path: "/addresses" },
     { name: "Categories", path: "/categories" },
     { name: "Products", path: "/products" },
     { name: "Transactions", path: "/transactions" },

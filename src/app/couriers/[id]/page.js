@@ -82,39 +82,40 @@ const CourierDetailPage = () => {
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Courier Details</h1>
             <form className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">ID</label>
+                    <label className="block text-sm font-medium text-darkGrey">ID</label>
                     <input
                         type="text"
                         value={courier.id}
                         readOnly
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Name</label>
+                    <label className="block text-sm font-medium text-darkGrey">Name</label>
                     <input
                         type="text"
                         value={courier.name}
                         onChange={(e) => setCourier({ ...courier, name: e.target.value })}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Created At</label>
+                    <label className="block text-sm font-medium text-darkGrey">Created At</label>
                     <input
                         type="text"
                         value={formatDate(courier.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Last Updated At</label>
+                    <label className="block text-sm font-medium text-darkGrey">Last Updated At</label>
                     <input
                         type="text"
                         value={formatDate(courier.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
