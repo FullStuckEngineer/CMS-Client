@@ -75,10 +75,6 @@ const UserPage = () => {
         router.push(`/users/${id}`);
     };
 
-    const handleCreateUser = () => {
-        router.push('/users/create');
-    };
-
     const renderPageNumbers = () => {
         const pageNumbers = [];
         const maxPageNumbersToShow = 3;
@@ -123,14 +119,6 @@ const UserPage = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button
-                    type="button"
-                    className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 md:w-28 w-36 flex items-center justify-center"
-                    onClick={handleCreateUser}
-                >
-                    <ListPlus className="mr-2"/>
-                    Create
-                </button>
             </div>
             <div className="flex mb-8">
                 <select
