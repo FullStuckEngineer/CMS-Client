@@ -23,8 +23,12 @@ export default function RootLayout({ children, session }) {
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
+    if (!token) {
+      router.push("/auth/login");
+    } else {
+      setIsLoggedIn(true);
+    }
+  }, [router]);
 
   return (
     <html lang="en">

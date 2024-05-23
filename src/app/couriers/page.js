@@ -157,7 +157,7 @@ const CouriersPage = () => {
                             onClick={() => paginate(1)}
                             className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
                         >
-                            First
+                            <ArrowLineLeft/>
                         </button>
                     )}
                     {renderPageNumbers()}
@@ -166,7 +166,7 @@ const CouriersPage = () => {
                             onClick={() => paginate(totalPages)}
                             className="mx-1 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
                         >
-                            Last
+                            <ArrowLineRight/>
                         </button>
                     )}
                 </div>
