@@ -1,16 +1,38 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter, useParams } from 'next/navigation';
+import { AuthContext } from "@/app/layout";
 import axios from 'axios';
+import Image from "next/image";
+import profilPlaceholder from "@/assets/images/profile-placeholder.jpg";
 
 const UserDetailPage = () => {
+    const { isLoggedIn } = useContext(AuthContext);
     const router = useRouter();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push("/auth/login");
+        }
+    }, [isLoggedIn, router]);
+
     const { id } = useParams();
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({
+        id: '',
+        name: '',
+        email: '',
+        role: 'user',
+        phone_number: '',
+        created_at: '',
+        update_at: '',
+        photo: ''
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [image, setImage] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
         if (id) {
@@ -26,11 +48,28 @@ const UserDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setUser(response.data.data);
+
+            const userData = response.data.data;
+
+            if (userData.photo){
+                await fetchImage(`${userData.photo}`);
+            }
+
+            setUser(userData);
             setLoading(false);
         } catch (error) {
             setError(error.message || "Error fetching user data");
             setLoading(false);
+        }
+    };
+
+    const fetchImage = async (path) => {
+        try {
+            setImage(`${process.env.NEXT_PUBLIC_BACKEND_PATH}/${path}`);
+            return;
+        } catch (error) {
+            console.error("Error fetching image:", error.message || error);
+            return null;
         }
     };
 
@@ -57,21 +96,23 @@ const UserDetailPage = () => {
 
         try {
             const token = sessionStorage.getItem("token");
-            const url = `${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users/${id}`;
-
-            const userData = {
-                name: updatedUser.name,
-                email: updatedUser.email,
-                role: updatedUser.role.toLowerCase(),
-                phone_number: updatedUser.phone_number,
-            };
-
-            const response = await axios.put(url, userData, {
+            await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users/${updatedUser.id}`, updatedUser, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
+                    Authorization: `Bearer ${token}`
+                }
             });
+
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append('image', imageFile);
+                formData.append('id', updatedUser.id);
+                await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users/uploads`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+            }
 
             router.push('/users');
         } catch (error) {
@@ -91,6 +132,11 @@ const UserDetailPage = () => {
         } catch (error) {
             setError(error.message || "Error deleting user");
         }
+    };
+
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
+        setImage(URL.createObjectURL(e.target.files[0]));
     };
 
     const formatDate = (dateString) => {
@@ -117,7 +163,7 @@ const UserDetailPage = () => {
                     <label className="block text-sm font-medium text-darkGrey">ID</label>
                     <input
                         type="text"
-                        value={user.id}
+                        value={user.id || ''}
                         readOnly
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
@@ -126,7 +172,7 @@ const UserDetailPage = () => {
                     <label className="block text-sm font-medium text-darkGrey">Name</label>
                     <input
                         type="text"
-                        value={user.name}
+                        value={user.name || ''}
                         onChange={(e) => setUser({ ...user, name: e.target.value })}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                     />
@@ -136,7 +182,7 @@ const UserDetailPage = () => {
                     <label className="block text-sm font-medium text-darkGrey">Email</label>
                     <input
                         type="text"
-                        value={user.email}
+                        value={user.email || ''}
                         onChange={(e) => setUser({ ...user, email: e.target.value })}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                     />
@@ -145,7 +191,7 @@ const UserDetailPage = () => {
                 <div>
                     <label className="block text-sm font-medium text-darkGrey">Role</label>
                     <select
-                        value={user.role}
+                        value={user.role || 'user'}
                         onChange={(e) => setUser({ ...user, role: e.target.value })}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                     >
@@ -157,8 +203,33 @@ const UserDetailPage = () => {
                     <label className="block text-sm font-medium text-darkGrey">Phone Number</label>
                     <input
                         type="text"
-                        value={user.phone_number}
+                        value={user.phone_number || ''}
                         onChange={(e) => setUser({ ...user, phone_number: e.target.value })}
+                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-darkGrey">Image</label>
+                    {image ? (
+                        <Image
+                            src={image}
+                            alt={user.name}
+                            className="w-32 h-32 object-cover"
+                            width={128}
+                            height={128}
+                        />
+                    ) : (
+                        <Image
+                            src={profilPlaceholder}
+                            alt="Placeholder"
+                            className="w-32 h-32 object-cover"
+                            width={128}
+                            height={128}
+                        />
+                    )}
+                    <input
+                        type="file"
+                        onChange={handleImageChange}
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
                     />
                 </div>
@@ -166,7 +237,7 @@ const UserDetailPage = () => {
                     <label className="block text-sm font-medium text-darkGrey">Created At</label>
                     <input
                         type="text"
-                        value={formatDate(user.created_at)}
+                        value={formatDate(user.created_at) || ''}
                         readOnly
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
@@ -175,7 +246,7 @@ const UserDetailPage = () => {
                     <label className="block text-sm font-medium text-darkGrey">Last Updated At</label>
                     <input
                         type="text"
-                        value={formatDate(user.update_at)}
+                        value={formatDate(user.update_at) || ''}
                         readOnly
                         className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
                     />
@@ -188,15 +259,13 @@ const UserDetailPage = () => {
                     >
                         Save
                     </button>
-                    {user.status === "Active" &&
-                        <button
-                            type="button"
-                            className="bg-red hover:bg-redhover text-white rounded-lg h-10 md:w-32 w-40"
-                            onClick={deleteUser}
-                        >
-                            Delete
-                        </button>
-                    }
+                    <button
+                        type="button"
+                        className="bg-red hover:bg-redhover text-white rounded-lg h-10 md:w-32 w-40"
+                        onClick={deleteUser}
+                    >
+                        Delete
+                    </button>
                     <button
                         type="button"
                         className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"
