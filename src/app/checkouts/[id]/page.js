@@ -19,6 +19,7 @@ const CheckoutDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [image, setImage] = useState(null);
+    const [userEmail, setUserEmail] = useState('');
 
     const statusOptions = [
         { value: 'waiting_payment', label: 'Waiting Payment' },
@@ -51,7 +52,9 @@ const CheckoutDetailPage = () => {
                 }
             });
             const checkoutData = response.data.data;
-            const username = await fetchUserName(checkoutData.user_id);
+            const userData = await fetchUserData(checkoutData.user_id);
+            const username = userData.name;
+            setUserEmail(userData.email);
             const courierName = await fetchCourierName(checkoutData.courier_id);
     
             const checkoutProducts = checkoutData.checkout_products;
@@ -77,7 +80,7 @@ const CheckoutDetailPage = () => {
         }
     };    
 
-    const fetchUserName = async (userId) => {
+    const fetchUserData = async (userId) => {
         try {
             const token = sessionStorage.getItem("token");
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users/${userId}`, {
@@ -85,7 +88,7 @@ const CheckoutDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            return response.data.data.name;
+            return response.data.data;
         } catch (error) {
             console.error("Error fetching user name:", error.message || error);
         }
@@ -123,20 +126,48 @@ const CheckoutDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            await sendEmailNotification(checkout.user.email);
+            
+            const transactionDetails = {
+                id: checkout.id,
+                total_cost: checkout.net_price,
+                payment_method: checkout.payment_method,
+                shipping_method: checkout.shipping_method
+            };
+            
+            await sendEmailNotification(userEmail, transactionDetails);
             setStatus('processing');
         } catch (error) {
             setError(error.message || "Error accepting payment");
         }
     };
-
-    const sendEmailNotification = async (email) => {
+    
+    
+    const sendEmailNotification = async (email, transactionDetails) => {
         try {
             const token = sessionStorage.getItem("token");
-            await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/notifications/email`, {
+            const { id, total_cost, payment_method, shipping_method } = transactionDetails;
+    
+            const emailBody = `
+                <div style="font-family: Arial, sans-serif; color: #000;">
+                    <p>Dear Customer,</p>
+                    <p>We are pleased to inform you that your transaction has been successfully approved by our admin team. Here are the details of your transaction:</p>
+                    <ul>
+                        <li><strong>Transaction ID:</strong> ${id}</li>
+                        <li><strong>Total Amount:</strong> ${total_cost}</li>
+                        <li><strong>Payment Method:</strong> ${payment_method}</li>
+                        <li><strong>Shipping Method:</strong> ${shipping_method}</li>
+                    </ul>
+                    <p>We are now processing your order and will notify you once it has been shipped.</p>
+                    <p>If you have any questions or need further assistance, please feel free to contact our customer support team.</p>
+                    <p>Thank you for shopping with us!</p>
+                    <p>Best regards,<br/>The Company Team</p>
+                </div>
+            `;
+    
+            await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/checkouts/email-notif`, {
                 to: email,
                 subject: 'Transaction Approved',
-                body: 'Your transaction has been approved by the admin.'
+                html: emailBody
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -145,8 +176,8 @@ const CheckoutDetailPage = () => {
         } catch (error) {
             console.error("Error sending email notification:", error.message || error);
         }
-    };
-
+    };    
+    
     const formatDate = (dateString) => {
         const options = {
             year: 'numeric',
