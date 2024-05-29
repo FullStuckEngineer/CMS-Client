@@ -36,7 +36,7 @@ export default function RootLayout({ children, session }) {
         <title>BabyBoo</title>
       </head>
       <body
-        className={`${poppins.className} bg-primary h-screen flex`}
+        className={`${poppins.className} bg-color-primary h-screen flex`}
         suppressHydrationWarning={true}
       >
         <SessionProviderWrapper session={session}>
@@ -45,7 +45,7 @@ export default function RootLayout({ children, session }) {
               {isLoggedIn && <Sidebar />}
               <div className={`flex-1 ${isLoggedIn ? 'ml-64' : ''}`}>
                 <Navbar />
-                <main className="p-4 mt-16">
+                <main>
                   {children}
                 </main>
               </div>

@@ -179,16 +179,16 @@ const AddressDetailPage = () => {
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Address Details</h1>
             <form className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">ID</label>
+                    <label className="block text-sm font-medium text-color-gray-700">ID</label>
                     <input
                         type="text"
                         value={address.id}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">User</label>
+                    <label className="block text-sm font-medium text-color-gray-700">User</label>
                     <Select
                         value={users.find(user => user.value === address.user_id)}
                         onChange={(selected) => setAddress({ ...address, user_id: selected.value })}
@@ -200,40 +200,40 @@ const AddressDetailPage = () => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Receiver Name</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Receiver Name</label>
                     <input
                         type="text"
                         value={address.receiver_name}
                         onChange={(e) => setAddress({ ...address, receiver_name: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                     {nameError && <p className="text-red text-sm mt-1">{nameError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Receiver Phone</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Receiver Phone</label>
                     <input
                         type="text"
                         value={address.receiver_phone}
                         onChange={(e) => setAddress({ ...address, receiver_phone: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                     {phoneError && <p className="text-red text-sm mt-1">{phoneError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Detail Address</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Detail Address</label>
                     <input
                         type="text"
                         value={address.detail_address}
                         onChange={(e) => setAddress({ ...address, detail_address: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                     {detailAddressError && <p className="text-red text-sm mt-1">{detailAddressError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">City</label>
+                    <label className="block text-sm font-medium text-color-gray-700">City</label>
                     <Select
                         value={cities.find(city => city.value === address.city_id)}
                         onChange={(selected) => setAddress({ ...address, city_id: selected.value })}
@@ -246,63 +246,63 @@ const AddressDetailPage = () => {
                     {cityError && <p className="text-red text-sm mt-1">{cityError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Province</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Province</label>
                     <input
                         type="text"
                         value={address.province}
                         onChange={(e) => setAddress({ ...address, province: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                     {provinceError && <p className="text-red text-sm mt-1">{provinceError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Postal Code</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Postal Code</label>
                     <input
                         type="text"
                         value={address.postal_code}
                         onChange={(e) => setAddress({ ...address, postal_code: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                     {postalCodeError && <p className="text-red text-sm mt-1">{postalCodeError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Created At</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Created At</label>
                     <input
                         type="text"
                         value={formatDate(address.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Last Updated At</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Last Updated At</label>
                     <input
                         type="text"
                         value={formatDate(address.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="button"
-                        className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={() => saveAddress(address)}
                     >
                         Save
                     </button>
                     <button
                         type="button"
-                        className="bg-red hover:bg-redhover text-white rounded-lg h-10 md:w-32 w-40"
+                        className="bg-color-red hover:bg-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={deleteAddress}
                     >
                         Delete
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/addresses')}
                     >
                         Close

@@ -15,17 +15,17 @@ export const CardProduct = () => {
           loading="lazy"
         />
         <div className="px-8 pb-5">
-          <h5 className="text-xl font-semibold tracking-tight text-white">
+          <h5 className="text-xl font-semibold tracking-tight text-color-primary">
             Mamy Popo
           </h5>
-          <p className="text-sm text-white">
+          <p className="text-sm text-color-primary">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis
             dicta officia distinctio!
           </p>
         </div>
       </Link>
       <div className="flex flex-col px-8 pb-5">
-        <h5 className="text-xl font-bold text-white">
+        <h5 className="text-xl font-bold text-color-primary">
           Rp. <span>1000</span>
         </h5>
         <div className="flex justify-end gap-2">

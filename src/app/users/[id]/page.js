@@ -160,56 +160,56 @@ const UserDetailPage = () => {
             <h1 className="text-2xl font-bold mb-4 justify-center flex">User Details</h1>
             <form className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">ID</label>
+                    <label className="block text-sm font-medium text-color-gray-700">ID</label>
                     <input
                         type="text"
                         value={user.id || ''}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Name</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Name</label>
                     <input
                         type="text"
                         value={user.name || ''}
                         onChange={(e) => setUser({ ...user, name: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     />
                     {nameError && <p className="text-red text-sm mt-1">{nameError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Email</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Email</label>
                     <input
                         type="text"
                         value={user.email || ''}
                         onChange={(e) => setUser({ ...user, email: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     />
                     {emailError && <p className="text-red text-sm mt-1">{emailError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Role</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Role</label>
                     <select
                         value={user.role || 'user'}
                         onChange={(e) => setUser({ ...user, role: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     >
                         <option value="admin">Admin</option>
                         <option value="user">User</option>
                     </select>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Phone Number</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Phone Number</label>
                     <input
                         type="text"
                         value={user.phone_number || ''}
                         onChange={(e) => setUser({ ...user, phone_number: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Image</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Image</label>
                     {image ? (
                         <Image
                             src={image}
@@ -230,45 +230,45 @@ const UserDetailPage = () => {
                     <input
                         type="file"
                         onChange={handleImageChange}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Created At</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Created At</label>
                     <input
                         type="text"
                         value={formatDate(user.created_at) || ''}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Last Updated At</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Last Updated At</label>
                     <input
                         type="text"
                         value={formatDate(user.update_at) || ''}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="button"
-                        className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={() => saveUser(user)}
                     >
                         Save
                     </button>
                     <button
                         type="button"
-                        className="bg-red hover:bg-redhover text-white rounded-lg h-10 md:w-32 w-40"
+                        className="bg-red hover:bg-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={deleteUser}
                     >
                         Delete
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/users')}
                     >
                         Close

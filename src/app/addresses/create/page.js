@@ -104,37 +104,37 @@ const AddressCreatePage = () => {
             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleCreateAddress(); }}>
                 {error && <div className="text-red mb-4">{error}</div>}
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Receiver Name</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Receiver Name</label>
                     <input
                         type="text"
                         value={receiverName}
                         onChange={(e) => setReceiverName(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Receiver Phone</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Receiver Phone</label>
                     <input
                         type="text"
                         value={receiverPhone}
                         onChange={(e) => setReceiverPhone(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Detail Address</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Detail Address</label>
                     <input
                         type="text"
                         value={detailAddress}
                         onChange={(e) => setDetailAddress(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">City</label>
+                    <label className="block text-sm font-medium text-color-gray-700">City</label>
                     <Select
                         value={cityId}
                         onChange={setCityId}
@@ -146,27 +146,27 @@ const AddressCreatePage = () => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Province</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Province</label>
                     <input
                         type="text"
                         value={province}
                         onChange={(e) => setProvince(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Postal Code</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Postal Code</label>
                     <input
                         type="text"
                         value={postalCode}
                         onChange={(e) => setPostalCode(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">User</label>
+                    <label className="block text-sm font-medium text-color-gray-700">User</label>
                     <Select
                         value={userId}
                         onChange={setUserId}
@@ -180,14 +180,14 @@ const AddressCreatePage = () => {
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="submit"
-                        className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         disabled={loading}
                     >
                         {loading ? 'Creating...' : 'Create'}
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/addresses')}
                     >
                         Close
