@@ -5,7 +5,7 @@ import { AuthContext } from "@/app/layout";
 import axios from 'axios';
 import Select from 'react-select';
 import Image from "next/image";
-import profilPlaceholder from "@/assets/images/profile-placeholder.jpg";
+import productPlaceholder from "@/assets/images/product-placeholder.jpg";
 
 const ProductDetailPage = () => {
     const { isLoggedIn } = useContext(AuthContext);
@@ -50,7 +50,9 @@ const ProductDetailPage = () => {
             });
             const productData = response.data.data;
 
-            await fetchImage(`${productData.photo}`);
+            if (productData.photo){
+                await fetchImage(`${productData.photo}`);
+            }
 
             setProduct(productData);
             setLoading(false);
@@ -62,15 +64,7 @@ const ProductDetailPage = () => {
 
     const fetchImage = async (path) => {
         try {
-            const token = sessionStorage.getItem("token");
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_PATH}/${path}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                responseType: 'blob'
-            });
-            console.log("Image response:", response);
-            setImage(response.data);
+            setImage(`${process.env.NEXT_PUBLIC_BACKEND_PATH}/${path}`);
             return;
         } catch (error) {
             console.error("Error fetching image:", error.message || error);
@@ -225,6 +219,8 @@ const ProductDetailPage = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
+    console.log("Image", image);
+
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Product Details</h1>
@@ -334,7 +330,7 @@ const ProductDetailPage = () => {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-darkGrey">Image</label>
-                    {image ? (
+                    {image  ? (
                         <Image
                             src={image}
                             alt={product.name}
@@ -344,7 +340,7 @@ const ProductDetailPage = () => {
                         />
                     ) : (
                         <Image
-                            src={profilPlaceholder}
+                            src={productPlaceholder}
                             alt="Placeholder"
                             className="w-32 h-32 object-cover"
                             width={128}
