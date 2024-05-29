@@ -199,115 +199,115 @@ const CheckoutDetailPage = () => {
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Transaction Details</h1>
             <form className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">ID</label>
+                    <label className="block text-sm font-medium text-color-gray-700">ID</label>
                     <input
                         type="text"
                         value={checkout.id}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">User</label>
+                    <label className="block text-sm font-medium text-color-gray-700">User</label>
                     <input
                         type="text"
                         value={`${checkout.user_id}: ${checkout.user.username}`}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Address ID</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Address ID</label>
                     <input
                         type="text"
                         value={checkout.address_id}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Courier</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Courier</label>
                     <input
                         type="text"
                         value={`${checkout.courier_id}: ${checkout.courier.name}`}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Shipping Method</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Shipping Method</label>
                     <input
                         type="text"
                         value={checkout.shipping_method}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Shipping Note</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Shipping Note</label>
                     <input
                         type="text"
                         value={checkout.shipping_note}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Total Weight</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Total Weight</label>
                     <input
                         type="text"
                         value={checkout.total_weight}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Total Cost</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Total Cost</label>
                     <input
                         type="text"
                         value={checkout.total_cost}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Shipping Cost</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Shipping Cost</label>
                     <input
                         type="text"
                         value={checkout.shipping_cost}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Net Price</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Net Price</label>
                     <input
                         type="text"
                         value={checkout.net_price}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Payment Method</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Payment Method</label>
                     <input
                         type="text"
                         value={checkout.payment_method}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Bank</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Bank</label>
                     <input
                         type="text"
                         value={checkout.bank}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Payment Receipt</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Payment Receipt</label>
                     {checkout.payment_receipt ? (
                         <div className="flex items-center">
                             <Image
@@ -320,7 +320,7 @@ const CheckoutDetailPage = () => {
                             {status === 'payment_verified' && payment_method === 'manual' && (
                                 <button
                                     type="button"
-                                    className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 ml-4 px-4"
+                                    className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 ml-4 px-4"
                                     onClick={acceptPayment}
                                 >
                                     Accept
@@ -338,7 +338,7 @@ const CheckoutDetailPage = () => {
                     )}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Status</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Status</label>
                     <Select
                         value={statusOptions.find(option => option.value === status)}
                         onChange={(selected) => setStatus(selected.value)}
@@ -350,30 +350,30 @@ const CheckoutDetailPage = () => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Midtrans Data</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Midtrans Data</label>
                     <textarea
                         value={JSON.stringify(checkout.midtrans_data, null, 2)}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                         rows="4"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Created At</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Created At</label>
                     <input
                         type="text"
                         value={formatDate(checkout.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Updated At</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Updated At</label>
                     <input
                         type="text"
                         value={formatDate(checkout.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
             </form>
@@ -394,7 +394,7 @@ const CheckoutDetailPage = () => {
                         </thead>
                         <tbody>
                             {checkoutProducts.map((product) => (
-                                <tr key={product.id} className="hover:bg-grey-100">
+                                <tr key={product.id} className="hover:bg-color-gray-200">
                                     <td className="px-4 py-2 w-32 overflow-hidden whitespace-nowrap truncate text-center">{product.id}</td>
                                     <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{product.product_id}</td>
                                     <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{product.product.name}</td>
@@ -411,7 +411,7 @@ const CheckoutDetailPage = () => {
             <div className="flex justify-center mt-10">
                 <button
                     type="button"
-                    className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"
+                    className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
                     onClick={() => router.push('/checkouts')}
                 >
                     Close

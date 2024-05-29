@@ -110,37 +110,37 @@ const CreateProductPage = () => {
             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleCreateProduct(); }}>
                 {error && <div className="text-red mb-4">{error}</div>}
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Name</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Name</label>
                     <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Price</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Price</label>
                     <input
                         type="number"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Weight</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Weight</label>
                     <input
                         type="number"
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Category</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Category</label>
                     <Select
                         value={categoryId}
                         onChange={setCategoryId}
@@ -152,61 +152,61 @@ const CreateProductPage = () => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Stock</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Stock</label>
                     <input
                         type="number"
                         value={stock}
                         onChange={(e) => setStock(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">SKU</label>
+                    <label className="block text-sm font-medium text-color-gray-700">SKU</label>
                     <input
                         type="text"
                         value={sku}
                         onChange={(e) => setSku(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Description</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Description</label>
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Keywords</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Keywords</label>
                     <input
                         type="text"
                         value={keywords}
                         onChange={(e) => setKeywords(e.target.value)}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Image</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Image</label>
                     <input
                         type="file"
                         onChange={handleImageChange}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="submit"
-                        className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         disabled={loading}
                     >
                         {loading ? 'Creating...' : 'Create'}
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/products')}
                     >
                         Close

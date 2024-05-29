@@ -19,10 +19,10 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 h-full bg-green text-white w-64 py-6 px-4 z-20">
+    <div className="fixed top-0 left-0 h-full bg-color-green text-color-primary w-64 py-6 px-4 z-20">
       <Link
         href="/"
-        className="font-bold text-white hover:text-grey text-2xl p-4"
+        className="font-bold text-color-primary hover:text-color-gray-300 text-2xl p-4"
       >
         BabyBoo
       </Link>
@@ -30,11 +30,12 @@ const Sidebar = () => {
         <ul>
           {menuItems.map((item) => (
             <li key={item.name}>
-              <Link href={item.path}
+              <Link
+                href={item.path}
                 className={`block py-2 px-4 rounded-md ${
                   router.pathname === item.path
-                    ? "bg-greenhover"
-                    : "hover:bg-greenhover"
+                    ? "bg-color-greenhover"
+                    : "hover:bg-color-greenhover"
                 }`}
               >
                 {item.name}

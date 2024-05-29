@@ -89,61 +89,61 @@ const CourierDetailPage = () => {
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Courier Details</h1>
             <form className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">ID</label>
+                    <label className="block text-sm font-medium text-color-gray-700">ID</label>
                     <input
                         type="text"
                         value={courier.id}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Name</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Name</label>
                     <input
                         type="text"
                         value={courier.name}
                         onChange={(e) => setCourier({ ...courier, name: e.target.value })}
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
                     {nameError && <p className="text-red text-sm mt-1">{nameError}</p>}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Created At</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Created At</label>
                     <input
                         type="text"
                         value={formatDate(courier.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-darkGrey">Last Updated At</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Last Updated At</label>
                     <input
                         type="text"
                         value={formatDate(courier.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-grey rounded-md shadow-sm p-2 bg-lightGrey"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="button"
-                        className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={() => saveCourier(courier)}
                     >
                         Save
                     </button>
                     <button
                         type="button"
-                        className="bg-red hover:bg-redhover text-white rounded-lg h-10 md:w-32 w-40"
+                        className="bg-red hover:bg-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={deleteCourier}
                     >
                         Delete
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/couriers')}
                     >
                         Close
