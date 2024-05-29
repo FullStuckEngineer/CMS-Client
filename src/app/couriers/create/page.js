@@ -55,7 +55,7 @@ const CourierCreatePage = () => {
                         className="border border-green hover:bg-lightGrey text-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/couriers')}
                     >
-                        Cancel
+                        Close
                     </button>
                 </div>
             </form>

@@ -1,0 +1,330 @@
+"use client";
+import React, { useState, useEffect, useContext, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { AuthContext } from "@/app/layout";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Button from "@/components/ui/Button";
+import { ArrowSquareIn, ListPlus, ArrowLineLeft, ArrowLineRight } from "@phosphor-icons/react";
+import Select from 'react-select';
+import { debounce } from 'lodash';
+
+const CheckoutPage = () => {
+    const { isLoggedIn } = useContext(AuthContext);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push("/auth/login");
+        }
+    }, [isLoggedIn, router]);
+
+    const [checkouts, setCheckouts] = useState([]);
+    const [searchTerms, setSearchTerms] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [users, setUsers] = useState([]);
+    const [couriers, setCouriers] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedCourier, setSelectedCourier] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState(null);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+    const [sortBy, setSortBy] = useState("");
+    const [initialLoad, setInitialLoad] = useState(true);
+    const [paymentMethodOptions, setPaymentMethodOptions] = useState([]);
+    const perPage = 10;
+
+    useEffect(() => {
+        fetchCheckoutsData();
+    }, [currentPage, searchTerms, selectedUser, selectedCourier, selectedStatus, selectedPaymentMethod, sortBy]);
+
+    useEffect(() => {
+        if (initialLoad) {
+            fetchUsers();
+            fetchCouriers();
+            setInitialLoad(false);
+        }
+    }, []);
+
+    const fetchCheckoutsData = async () => {
+        try {
+
+            const token = sessionStorage.getItem("token");
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/checkouts`, {
+                params: {
+                    page: currentPage,
+                    perPage: perPage,
+                    searchTerms: searchTerms,
+                    userId: selectedUser ? selectedUser.value : "",
+                    courierId: selectedCourier ? selectedCourier.value : "",
+                    paymentMethod: selectedPaymentMethod ? selectedPaymentMethod.value : "",
+                    status: selectedStatus ? selectedStatus.value : "",
+                    sortBy: sortBy
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const checkoutsData = response.data.data;
+            setCheckouts(checkoutsData.checkouts);
+            setTotalPages(checkoutsData.totalPages);
+
+            const paymentMethods = [...new Set(checkoutsData.checkouts.map(checkout => checkout.payment_method))];
+            setPaymentMethodOptions(paymentMethods.map(method => ({ value: method, label: method })));
+
+        } catch (error) {
+            console.error("Fetch checkouts error:", error.message || error);
+            toast.error('No Checkouts Found');
+        }
+    };
+
+    const fetchUsers = async () => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                params: {
+                    role: 'user'
+                }
+            });
+
+            const allUsers = [];
+            const totalPages = response.data.data.totalPages;
+            for (let i = 1; i <= totalPages; i++) {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users?page=${i}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                    params: {
+                        role: 'user'
+                    }
+                });
+                allUsers.push(...res.data.data.users);
+            }
+            setUsers(allUsers.map(user => ({ value: user.id, label: `${user.id} : ${user.name}`})));
+            
+        } catch (error) {
+            console.error("Fetch users error:", error.message || error);
+            toast.error('No Users Found');
+        }
+    };
+
+    const fetchCouriers = async () => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/couriers`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const allCouriers = [];
+            const totalPages = response.data.data.totalPages;
+            for (let i = 1; i <= totalPages; i++) {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/couriers?page=${i}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                allCouriers.push(...res.data.data.couriers);
+            }
+            setCouriers(allCouriers.map(courier => ({ value: courier.id, label: `${courier.id} : ${courier.name}`})));
+            
+        } catch (error) {
+            console.error("Fetch couriers error:", error.message || error);
+            toast.error('No Couriers Found');
+        }
+    };
+
+    const debouncedSearch = useCallback(
+        debounce((value) => {
+            setSearchTerms(value);
+        }, 300),
+        []
+    );
+
+    const handleSearchChange = (e) => {
+        debouncedSearch(e.target.value);
+    };
+
+    const handleResetAll = () => {
+        setSearchTerms("");
+        setSelectedUser(null);
+        setSelectedCourier(null);
+        setSelectedStatus(null);
+        setSelectedPaymentMethod(null);
+        setSortBy("");
+        setCurrentPage(1);
+    };
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const handleEditCheckout = (id) => {
+        router.push(`/checkouts/${id}`);
+    };
+
+    const renderPageNumbers = () => {
+        const pageNumbers = [];
+        const maxPageNumbersToShow = 5;
+        let startPage = Math.max(currentPage - Math.floor(maxPageNumbersToShow / 2), 1);
+        let endPage = startPage + maxPageNumbersToShow - 1;
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(endPage - maxPageNumbersToShow + 1, 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageNumbers.push(
+                <button
+                    key={i}
+                    onClick={() => paginate(i)}
+                    className={`mx-1 px-3 py-1 text-darkGrey rounded hover:bg-lightGreen ${currentPage === i ? 'font-bold' : ''}`}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        return pageNumbers;
+    };
+
+    const statusOptions = [
+        { value: 'waiting_payment', label: 'Waiting Payment' },
+        { value: 'payment_verified', label: 'Payment Verified' },
+        { value: 'processing', label: 'Processing' },
+        { value: 'shipping', label: 'Shipping' },
+        { value: 'delivered', label: 'Delivered' },
+        { value: 'completed', label: 'Completed' },
+        { value: 'cancelled', label: 'Cancelled' }
+    ];
+
+    return (
+        <div className="p-4 justify-center w-full">
+            <ToastContainer />
+            <div className="flex justify-between items-center mb-8 mt-4">
+                <h1 className="text-2xl font-bold">Transactions</h1>
+                <button onClick={handleResetAll} className="text-blue-500 hover:underline">
+                    Reset All
+                </button>
+            </div>
+            <div className="flex mb-2 space-x-2">
+                <input
+                    type="text"
+                    placeholder="Search here..."
+                    className="border p-2 rounded flex-1 mr-2"
+                    onChange={handleSearchChange}
+                />
+            </div>
+            <div className="flex mb-8">
+                <Select
+                    value={selectedUser}
+                    onChange={setSelectedUser}
+                    options={users}
+                    className="flex-1 mr-3"
+                    placeholder="Select User"
+                    isSearchable
+                />
+                <Select
+                    value={selectedCourier}
+                    onChange={setSelectedCourier}
+                    options={couriers}
+                    className="flex-1 mr-3"
+                    placeholder="Select Courier"
+                    isSearchable
+                />
+                <Select
+                    value={selectedPaymentMethod}
+                    onChange={setSelectedPaymentMethod}
+                    options={paymentMethodOptions}
+                    className="flex-1 mr-3"
+                    placeholder="Select Payment Method"
+                    isSearchable
+                />
+                <Select
+                    value={selectedStatus}
+                    onChange={setSelectedStatus}
+                    options={statusOptions}
+                    className="flex-1 mr-3"
+                    placeholder="Select Status"
+                    isSearchable
+                />
+                <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="border p-2 rounded flex-1"
+                >
+                    <option value="">Sort By</option>
+                    <option value="payment_method">Payment Method</option>
+                    <option value="bank">Bank</option>
+                    <option value="status">Status</option>
+                </select>
+            </div>
+            <div className="overflow-x-auto">
+                <table className="min-w-full w-full">
+                    <thead>
+                        <tr>
+                            <th className="px-4 py-2 border-b">ID</th>
+                            <th className="px-4 py-2 border-b">User ID</th>
+                            <th className="px-4 py-2 border-b">Address ID</th>
+                            <th className="px-4 py-2 border-b">Courier ID</th>
+                            <th className="px-4 py-2 border-b">Payment Method</th>
+                            <th className="px-4 py-2 border-b">Bank</th>
+                            <th className="px-4 py-2 border-b">Net Price</th>
+                            <th className="px-4 py-2 border-b">Status</th>
+                            <th className="px-4 py-2 border-b">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {checkouts.map((checkout) => (
+                            <tr key={checkout.id} className="hover:bg-grey-100">
+                                <td className="px-4 py-2 w-32 overflow-hidden whitespace-nowrap truncate text-center">{checkout.id}</td>
+                                <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.user_id}</td>
+                                <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.address_id}</td>
+                                <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.courier_id}</td>
+                                <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.payment_method}</td>
+                                <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.bank}</td>
+                                <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.net_price}</td>
+                                <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.status}</td>
+                                <td className="px-4 py-2 text-center">
+                                    <Button
+                                        className="bg-green hover:bg-greenhover text-primary rounded-lg h-10"
+                                        onClick={() => handleEditCheckout(checkout.id)}
+                                    >
+                                        <ArrowSquareIn className="w-10 h-5" />
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <div className="flex justify-center mt-4">
+                    {currentPage > 1 && (
+                        <button
+                            onClick={() => paginate(1)}
+                            className="mx-1 px-3 py-1 text-darkGrey rounded hover:bg-lightGreen"
+                        >
+                            <ArrowLineLeft/>
+                        </button>
+                    )}
+                    {renderPageNumbers()}
+                    {currentPage < totalPages && (
+                        <button
+                            onClick={() => paginate(totalPages)}
+                            className="mx-1 px-3 py-1 text-darkGrey rounded hover:bg-lightGreen"
+                        >
+                            <ArrowLineRight/>
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CheckoutPage;
