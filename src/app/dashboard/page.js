@@ -136,10 +136,6 @@ const DashboardPage = () => {
                     <h2 className="text-xl font-semibold">Total Cities</h2>
                     <p className="text-2xl">{data.totalCities}</p>
                 </div>
-                <div className="bg-white shadow-md rounded-lg p-6">
-                    <h2 className="text-xl font-semibold">Total Stores</h2>
-                    <p className="text-2xl">{data.totalStores}</p>
-                </div>
             </div>
         </div>
     );
