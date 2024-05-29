@@ -15,6 +15,7 @@ const CheckoutDetailPage = () => {
     const [checkout, setCheckout] = useState(null);
     const [checkoutProducts, setCheckoutProducts] = useState([]);
     const [status, setStatus] = useState('');
+    const [payment_method, setPaymentMethod] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [image, setImage] = useState(null);
@@ -64,6 +65,7 @@ const CheckoutDetailPage = () => {
     
             setCheckout({ ...checkoutData, user: { username }, courier: { name: courierName } });
             setStatus(checkoutData.status);
+            setPaymentMethod(checkoutData.payment_method.toLowerCase());
             setLoading(false);
     
             if (checkoutData.payment_receipt) {
@@ -284,7 +286,7 @@ const CheckoutDetailPage = () => {
                                 width={128}
                                 height={128}
                             />
-                            {status === 'payment_verified' && (
+                            {status === 'payment_verified' && payment_method === 'manual' && (
                                 <button
                                     type="button"
                                     className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 ml-4 px-4"
