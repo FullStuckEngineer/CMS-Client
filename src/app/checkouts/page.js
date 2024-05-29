@@ -168,10 +168,6 @@ const CheckoutPage = () => {
         router.push(`/checkouts/${id}`);
     };
 
-    const handleCreateCheckout = () => {
-        router.push('/checkouts/create');
-    };
-
     const renderPageNumbers = () => {
         const pageNumbers = [];
         const maxPageNumbersToShow = 5;
@@ -224,14 +220,6 @@ const CheckoutPage = () => {
                     className="border p-2 rounded flex-1 mr-2"
                     onChange={handleSearchChange}
                 />
-                <button
-                    type="button"
-                    className="bg-green hover:bg-greenhover text-primary rounded-lg h-10 md:w-28 w-36 flex items-center justify-center"
-                    onClick={handleCreateCheckout}
-                >
-                    <ListPlus className="mr-2"/>
-                    Create
-                </button>
             </div>
             <div className="flex mb-8">
                 <Select
@@ -288,7 +276,6 @@ const CheckoutPage = () => {
                             <th className="px-4 py-2 border-b">Payment Method</th>
                             <th className="px-4 py-2 border-b">Bank</th>
                             <th className="px-4 py-2 border-b">Net Price</th>
-                            <th className="px-4 py-2 border-b">Number of Checkout Products</th>
                             <th className="px-4 py-2 border-b">Status</th>
                             <th className="px-4 py-2 border-b">Actions</th>
                         </tr>
@@ -303,7 +290,6 @@ const CheckoutPage = () => {
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.payment_method}</td>
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.bank}</td>
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.net_price}</td>
-                                <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.number_of_checkout_products}</td>
                                 <td className="px-4 py-2 w-100 overflow-hidden whitespace-nowrap truncate text-center">{checkout.status}</td>
                                 <td className="px-4 py-2 text-center">
                                     <Button
