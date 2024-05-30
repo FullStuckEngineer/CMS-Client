@@ -28,10 +28,10 @@ const CourierCreatePage = () => {
     };
 
     return (
-        <div className="p-4">
+        <div className="relative p-4 pt-24 justify-center w-full h-screen">
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Create New Courier</h1>
             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleCreateCourier(); }}>
-                {error && <div className="text-red mb-4">{error}</div>}
+                {error && <div className="text-color-red mb-4">{error}</div>}
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Name</label>
                     <input
@@ -45,14 +45,14 @@ const CourierCreatePage = () => {
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="submit"
-                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         disabled={loading}
                     >
                         {loading ? 'Creating...' : 'Create'}
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-color-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/couriers')}
                     >
                         Close
