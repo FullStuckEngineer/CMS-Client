@@ -204,7 +204,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.id}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -213,7 +213,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={`${checkout.user_id}: ${checkout.user.username}`}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -222,7 +222,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.address_id}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -231,7 +231,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={`${checkout.courier_id}: ${checkout.courier.name}`}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -240,7 +240,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.shipping_method}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -249,7 +249,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.shipping_note}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -258,7 +258,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.total_weight}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -267,7 +267,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.total_cost}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -276,7 +276,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.shipping_cost}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -285,7 +285,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.net_price}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -294,7 +294,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.payment_method}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -303,7 +303,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.bank}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -354,7 +354,7 @@ const CheckoutDetailPage = () => {
                     <textarea
                         value={JSON.stringify(checkout.midtrans_data, null, 2)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                         rows="4"
                     />
                 </div>
@@ -364,7 +364,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={formatDate(checkout.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
                 <div>
@@ -373,7 +373,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={formatDate(checkout.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
                     />
                 </div>
             </form>

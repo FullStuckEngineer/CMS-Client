@@ -20,7 +20,6 @@ const ProductDetailPage = () => {
     const { slug } = useParams();
     const [product, setProduct] = useState(null);
     const [categories, setCategories] = useState([]);
-    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [nameError, setNameError] = useState('');
@@ -36,7 +35,6 @@ const ProductDetailPage = () => {
         if (slug) {
             fetchProductData(slug);
             fetchCategories();
-            fetchUsers();
         }
     }, [slug]);
 
@@ -50,7 +48,7 @@ const ProductDetailPage = () => {
             });
             const productData = response.data.data;
 
-            if (productData.photo){
+            if (productData.photo) {
                 await fetchImage(`${productData.photo}`);
             }
 
@@ -70,60 +68,20 @@ const ProductDetailPage = () => {
             console.error("Error fetching image:", error.message || error);
             return null;
         }
-    }; 
+    };
 
     const fetchCategories = async () => {
         try {
             const token = sessionStorage.getItem("token");
-
-            let where = {};
-            if (product.status === 'Active') {
-                where.status = 'Active';
-            }
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories`, {
-                where,
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                params: { status: "Active" },
+                headers: { Authorization: `Bearer ${token}` }
             });
 
-            const pages = response.data.data.totalPages;
-            for (let i = 2; i <= pages; i++) {
-                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories?page=${i}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                response.data.data.categories = response.data.data.categories.concat(res.data.data.categories);
-            }
-
-            setCategories(response.data.data.categories.map(category => ({ value: category.id, label: `${category.id} : ${category.name}` })));
+            const categories = response.data.data.categories.map(category => ({ value: category.id, label: `${category.id} : ${category.name}` }));
+            setCategories(categories);
         } catch (error) {
             console.error("Fetch categories error:", error.message || error);
-        }
-    };
-
-    const fetchUsers = async () => {
-        try {
-            const token = sessionStorage.getItem("token");
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            const pages = response.data.data.totalPages;
-            for (let i = 2; i <= pages; i++) {
-                const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users?page=${i}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                response.data.data.users = response.data.data.users.concat(res.data.data.users);
-            }
-            setUsers(response.data.data.users.map(user => ({ value: user.id, label: `${user.id} : ${user.name}`})));
-        } catch (error) {
-            console.error("Fetch users error:", error.message || error);
         }
     };
 
@@ -163,9 +121,7 @@ const ProductDetailPage = () => {
         try {
             const token = sessionStorage.getItem("token");
             await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/products/${product.id}`, updatedProduct, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             });
             if (imageFile) {
                 const formData = new FormData();
@@ -188,9 +144,7 @@ const ProductDetailPage = () => {
         try {
             const token = sessionStorage.getItem("token");
             await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/products/${product.id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             });
             router.push('/products');
         } catch (error) {
@@ -212,17 +166,16 @@ const ProductDetailPage = () => {
             minute: '2-digit',
             second: '2-digit'
         };
-        const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
-        return formattedDate;
+        return new Date(dateString).toLocaleDateString('en-US', options);
     };
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
-    console.log("Image", image);
+    const inputClass = (isReadOnly) => isReadOnly ? "mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen" : "mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2";
 
     return (
-        <div className="p-4">
+        <div className="relative p-4 pt-24 justify-center w-full h-screen">
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Product Details</h1>
             <form className="space-y-4">
                 <div>
@@ -231,7 +184,7 @@ const ProductDetailPage = () => {
                         type="text"
                         value={product.id}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
                     />
                 </div>
                 <div>
@@ -240,32 +193,35 @@ const ProductDetailPage = () => {
                         type="text"
                         value={product.name}
                         onChange={(e) => setProduct({ ...product, name: e.target.value })}
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
+                        className={inputClass(product.status === 'Inactive')}
                         required
+                        readOnly={product.status === 'Inactive'}
                     />
-                    {nameError && <p className="text-red text-sm mt-1">{nameError}</p>}
+                    {nameError && <p className="text-color-red text-sm mt-1">{nameError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Price</label>
                     <input
                         type="number"
                         value={product.price}
-                        onChange={(e) => setProduct({ ...product, price: parseInt(e.target.value) })}
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
+                        onChange={(e) => setProduct({ ...product, price: parseFloat(e.target.value) })}
+                        className={inputClass(product.status === 'Inactive')}
                         required
+                        readOnly={product.status === 'Inactive'}
                     />
-                    {priceError && <p className="text-red text-sm mt-1">{priceError}</p>}
+                    {priceError && <p className="text-color-red text-sm mt-1">{priceError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Weight</label>
                     <input
                         type="number"
                         value={product.weight}
-                        onChange={(e) => setProduct({ ...product, weight: parseInt(e.target.value) })}
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
+                        onChange={(e) => setProduct({ ...product, weight: parseFloat(e.target.value) })}
+                        className={inputClass(product.status === 'Inactive')}
                         required
+                        readOnly={product.status === 'Inactive'}
                     />
-                    {weightError && <p className="text-red text-sm mt-1">{weightError}</p>}
+                    {weightError && <p className="text-color-red text-sm mt-1">{weightError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Category</label>
@@ -276,9 +232,9 @@ const ProductDetailPage = () => {
                         className="mt-1 block w-full"
                         placeholder="Select Category"
                         isSearchable
-                        required
+                        isDisabled={product.status === 'Inactive'}
                     />
-                    {categoryError && <p className="text-red text-sm mt-1">{categoryError}</p>}
+                    {categoryError && <p className="text-color-red text-sm mt-1">{categoryError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Stock</label>
@@ -286,10 +242,11 @@ const ProductDetailPage = () => {
                         type="number"
                         value={product.stock}
                         onChange={(e) => setProduct({ ...product, stock: parseInt(e.target.value) })}
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
+                        className={inputClass(product.status === 'Inactive')}
                         required
+                        readOnly={product.status === 'Inactive'}
                     />
-                    {stockError && <p className="text-red text-sm mt-1">{stockError}</p>}
+                    {stockError && <p className="text-color-red text-sm mt-1">{stockError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">SKU</label>
@@ -297,10 +254,11 @@ const ProductDetailPage = () => {
                         type="text"
                         value={product.sku}
                         onChange={(e) => setProduct({ ...product, sku: e.target.value })}
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
+                        className={inputClass(product.status === 'Inactive')}
                         required
+                        readOnly={product.status === 'Inactive'}
                     />
-                    {skuError && <p className="text-red text-sm mt-1">{skuError}</p>}
+                    {skuError && <p className="text-color-red text-sm mt-1">{skuError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Slug</label>
@@ -308,7 +266,7 @@ const ProductDetailPage = () => {
                         type="text"
                         value={product.slug}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
                     />
                 </div>
                 <div>
@@ -316,7 +274,8 @@ const ProductDetailPage = () => {
                     <textarea
                         value={product.description}
                         onChange={(e) => setProduct({ ...product, description: e.target.value })}
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
+                        className={inputClass(product.status === 'Inactive')}
+                        readOnly={product.status === 'Inactive'}
                     />
                 </div>
                 <div>
@@ -325,12 +284,13 @@ const ProductDetailPage = () => {
                         type="text"
                         value={product.keywords}
                         onChange={(e) => setProduct({ ...product, keywords: e.target.value })}
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
+                        className={inputClass(product.status === 'Inactive')}
+                        readOnly={product.status === 'Inactive'}
                     />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Image</label>
-                    {image  ? (
+                    {image ? (
                         <Image
                             src={image}
                             alt={product.name}
@@ -351,6 +311,7 @@ const ProductDetailPage = () => {
                         type="file"
                         onChange={handleImageChange}
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
+                        disabled={product.status === 'Inactive'}
                     />
                 </div>
                 <div>
@@ -359,7 +320,7 @@ const ProductDetailPage = () => {
                         type="text"
                         value={formatDate(product.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
                     />
                 </div>
                 <div>
@@ -368,29 +329,31 @@ const ProductDetailPage = () => {
                         type="text"
                         value={formatDate(product.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-greenhover"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
-                    <button
-                        type="button"
-                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
-                        onClick={() => saveProduct(product)}
-                    >
-                        Save
-                    </button>
-                    {product.status === 'Active' &&
+                    {product.status === 'Active' && (
                         <button
                             type="button"
-                            className="bg-red hover:bg-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                            className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                            onClick={() => saveProduct(product)}
+                        >
+                            Save
+                        </button>
+                    )}
+                    {product.status === 'Active' && (
+                        <button
+                            type="button"
+                            className="bg-color-red hover:bg-color-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                             onClick={deleteProduct}
                         >
                             Delete
                         </button>
-                    }
+                    )}
                     <button
                         type="button"
-                        className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-color-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/products')}
                     >
                         Close

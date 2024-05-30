@@ -9,7 +9,7 @@ const CreateProductPage = () => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [weight, setWeight] = useState('');
-    const [categoryId, setCategoryId] = useState('');
+    const [categoryId, setCategoryId] = useState(null);
     const [stock, setStock] = useState('');
     const [sku, setSku] = useState('');
     const [description, setDescription] = useState('');
@@ -105,10 +105,10 @@ const CreateProductPage = () => {
     };
 
     return (
-        <div className="p-4">
+        <div className="relative p-4 pt-24 justify-center w-full h-screen">
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Create New Product</h1>
             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleCreateProduct(); }}>
-                {error && <div className="text-red mb-4">{error}</div>}
+                {error && <div className="text-color-red mb-4">{error}</div>}
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Name</label>
                     <input
@@ -148,7 +148,6 @@ const CreateProductPage = () => {
                         className="mt-1 block w-full"
                         placeholder="Select Category"
                         isSearchable
-                        required
                     />
                 </div>
                 <div>
@@ -199,14 +198,14 @@ const CreateProductPage = () => {
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="submit"
-                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         disabled={loading}
                     >
                         {loading ? 'Creating...' : 'Create'}
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-color-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/products')}
                     >
                         Close
