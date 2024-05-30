@@ -176,7 +176,7 @@ const UserDetailPage = () => {
                         onChange={(e) => setUser({ ...user, name: e.target.value })}
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     />
-                    {nameError && <p className="text-red text-sm mt-1">{nameError}</p>}
+                    {nameError && <p className="text-color-red text-sm mt-1">{nameError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Email</label>
@@ -186,7 +186,7 @@ const UserDetailPage = () => {
                         onChange={(e) => setUser({ ...user, email: e.target.value })}
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                     />
-                    {emailError && <p className="text-red text-sm mt-1">{emailError}</p>}
+                    {emailError && <p className="text-color-red text-sm mt-1">{emailError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Role</label>
@@ -254,21 +254,21 @@ const UserDetailPage = () => {
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="button"
-                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={() => saveUser(user)}
                     >
                         Save
                     </button>
                     <button
                         type="button"
-                        className="bg-red hover:bg-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-color-red hover:bg-color-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={deleteUser}
                     >
                         Delete
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-color-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/users')}
                     >
                         Close
