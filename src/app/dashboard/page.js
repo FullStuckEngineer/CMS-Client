@@ -15,7 +15,6 @@ import {
 } from 'chart.js';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Register the necessary Chart.js components
 ChartJS.register(
     ArcElement,
     BarElement,
@@ -59,8 +58,8 @@ const DashboardPage = () => {
         fetchData();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    if (error) return <div className="flex justify-center items-center h-screen">{error}</div>;
 
     const ordersByStatusData = {
         labels: data.ordersByStatus.map(status => status.status),
@@ -104,37 +103,62 @@ const DashboardPage = () => {
         ],
     };
 
+    console.log("Data Dashboard", data);
+
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-white shadow-md rounded-lg p-6">
-                    <h2 className="text-xl font-semibold">Total Users</h2>
-                    <p className="text-2xl">{data.totalUsers}</p>
+        <div className="relative p-4 pt-24 justify-center w-full h-screen">
+            <h1 className="text-3xl font-bold text-color-gray-800 mb-2 text-left">Dashboard</h1>
+            <div className="flex flex-col items-center">
+                <div className="grid grid-cols-1 gap-6 w-full max-w-6xl">
+                    <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center justify-center h-full">
+                        <h2 className="text-2xl font-semibold text-color-gray-800 text-center mb-4">Total Products</h2>
+                        <div className="flex justify-between w-full">
+                            <div className="flex flex-col items-center w-1/2">
+                                <h4 className="text-lg font-medium text-color-gray-700 text-center">Active</h4>
+                                <p className="text-3xl font-bold text-color-green text-center">{data.totalProducts.active}</p>
+                            </div>
+                            <div className="flex flex-col items-center w-1/2">
+                                <h4 className="text-lg font-medium text-color-gray-700 text-center">Inactive</h4>
+                                <p className="text-3xl font-bold text-color-red text-center">{data.totalProducts.inactive}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="bg-white shadow-md rounded-lg p-6">
-                    <h2 className="text-xl font-semibold">Total Products</h2>
-                    <p className="text-2xl">{data.totalProducts}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl mt-6" style={{ gridTemplateColumns: '1fr 1.7fr' }}>
+                    <div className="grid grid-rows-3 gap-6 w-full">
+                        <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center justify-center h-full">
+                            <h2 className="text-xl font-semibold text-color-gray-800 text-center">Total Users</h2>
+                            <p className="text-3xl font-bold text-color-gray-800 text-center">{data.totalUsers}</p>
+                        </div>
+                        <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center justify-center h-full">
+                            <h2 className="text-xl font-semibold text-color-gray-800 text-center">Total Orders</h2>
+                            <p className="text-3xl font-bold text-color-gray-800  text-center">{data.totalOrders}</p>
+                        </div>
+                        <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center justify-center h-full">
+                            <h2 className="text-xl font-semibold text-color-gray-800 text-center">Total Revenue</h2>
+                            <p className="text-3xl font-bold text-color-green text-center">Rp{data.totalRevenue}</p>
+                        </div>
+                    </div>
+                    <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center">
+                        <h2 className="text-xl font-semibold text-gray-800 text-center">Orders by Status</h2>
+                        <Doughnut data={ordersByStatusData} 
+                            options={
+                                {
+                                    plugins: {
+                                        legend: {
+                                            position: 'right',
+                                        },
+                                    },
+                                }
+                            } 
+                        />
+                    </div>
                 </div>
-                <div className="bg-white shadow-md rounded-lg p-6">
-                    <h2 className="text-xl font-semibold">Total Orders</h2>
-                    <p className="text-2xl">{data.totalOrders}</p>
-                </div>
-                <div className="bg-white shadow-md rounded-lg p-6">
-                    <h2 className="text-xl font-semibold">Total Revenue</h2>
-                    <p className="text-2xl">Rp{data.totalRevenue}</p>
-                </div>
-                <div className="bg-white shadow-md rounded-lg p-6 col-span-2">
-                    <h2 className="text-xl font-semibold">Orders by Status</h2>
-                    <Doughnut data={ordersByStatusData} />
-                </div>
-                <div className="bg-white shadow-md rounded-lg p-6 col-span-2">
-                    <h2 className="text-xl font-semibold">Top 5 Selling Products</h2>
-                    <Bar data={topSellingProductsData} />
-                </div>
-                <div className="bg-white shadow-md rounded-lg p-6">
-                    <h2 className="text-xl font-semibold">Total Cities</h2>
-                    <p className="text-2xl">{data.totalCities}</p>
+                <div className="grid grid-cols-1 gap-6 mt-6 w-full max-w-6xl">
+                    <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center">
+                        <h2 className="text-xl font-semibold text-color-gray-800 text-center">Top 5 Selling Products</h2>
+                        <Bar data={topSellingProductsData} />
+                    </div>
                 </div>
             </div>
         </div>
