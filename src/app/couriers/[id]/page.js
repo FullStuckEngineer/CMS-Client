@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CourierDetailPage = () => {
     const router = useRouter();
@@ -48,8 +50,12 @@ const CourierDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/couriers');
+            toast.success("Courier data saved successfully! Redirecting to Couriers List", {
+                autoClose: 2000,
+                onClose: () => router.push("/couriers"),
+            });
         } catch (error) {
+            toast.error(error.message || "Error saving courier data");
             setError(error.message || "Error saving courier data");
         }
     };
@@ -62,8 +68,12 @@ const CourierDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/couriers');
+            toast.success("Courier deleted successfully! Redirecting to Couriers List", {
+                autoClose: 2000,
+                onClose: () => router.push("/couriers"),
+            });
         } catch (error) {
+            toast.error(error.message || "Error deleting courier");
             setError(error.message || "Error deleting courier");
         }
     };
@@ -86,6 +96,7 @@ const CourierDetailPage = () => {
 
     return (
         <div className="relative p-4 pt-24 justify-center w-full h-screen">
+            <ToastContainer />
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Courier Details</h1>
             <form className="space-y-4">
                 <div>

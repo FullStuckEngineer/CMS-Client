@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import Select from 'react-select';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddressDetailPage = () => {
     const router = useRouter();
@@ -153,8 +155,14 @@ const AddressDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/addresses');
+            toas
+
+            toast.success("Success Saving Address Data! Redirecting to Addresses List", {
+				autoClose: 2000,
+                onClose: () => router.push('/addresses')
+            });
         } catch (error) {
+            toast.error("Error Saving Address Data");
             setError(error.message || "Error saving address data");
         }
     };
@@ -167,8 +175,12 @@ const AddressDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/addresses');
+            toast.success("Success Deleting Address! Redirecting to Addresses List", {
+				autoClose: 2000,
+                onClose: () => router.push('/addresses'),
+            });
         } catch (error) {
+            toast.error("Error Deleting Address");
             setError(error.message || "Error deleting address");
         }
     };
@@ -191,6 +203,7 @@ const AddressDetailPage = () => {
 
     return (
         <div className="p-4">
+            <ToastContainer />
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Address Details</h1>
             <form className="space-y-4">
                 <div>

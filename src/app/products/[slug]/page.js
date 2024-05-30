@@ -6,6 +6,8 @@ import axios from 'axios';
 import Select from 'react-select';
 import Image from "next/image";
 import productPlaceholder from "@/assets/images/product-placeholder.jpg";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductDetailPage = () => {
     const { isLoggedIn } = useContext(AuthContext);
@@ -134,8 +136,12 @@ const ProductDetailPage = () => {
                     }
                 });
             }
-            router.push('/products');
+            toast.success("Product data saved successfully! Redirecting to Products List", {
+                autoClose: 2000,
+                onClose: () => router.push("/products"),
+            });
         } catch (error) {
+            toast.error(error.message || "Error saving product data");
             setError(error.message || "Error saving product data");
         }
     };
@@ -146,8 +152,12 @@ const ProductDetailPage = () => {
             await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/products/${product.id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            router.push('/products');
+            toast.success("Product deleted successfully! Redirecting to Products List", {
+                autoClose: 2000,
+                onClose: () => router.push("/products"),
+            });
         } catch (error) {
+            toast.error(error.message || "Error deleting product");
             setError(error.message || "Error deleting product");
         }
     };
@@ -176,6 +186,7 @@ const ProductDetailPage = () => {
 
     return (
         <div className="relative p-4 pt-24 justify-center w-full h-screen">
+            <ToastContainer />
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Product Details</h1>
             <form className="space-y-4">
                 <div>

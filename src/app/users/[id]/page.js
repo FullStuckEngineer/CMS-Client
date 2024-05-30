@@ -5,6 +5,8 @@ import { AuthContext } from "@/app/layout";
 import axios from 'axios';
 import Image from "next/image";
 import profilPlaceholder from "@/assets/images/profile-placeholder.jpg";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserDetailPage = () => {
     const { isLoggedIn } = useContext(AuthContext);
@@ -114,8 +116,12 @@ const UserDetailPage = () => {
                 });
             }
 
-            router.push('/users');
+            toast.success("User data saved successfully! Redirecting to Users List", {
+                autoClose: 2000,
+                onClose: () => router.push("/users"),
+            });
         } catch (error) {
+            toast.error(error.message || "Error saving user data");
             setError(error.message || "Error saving user data");
         }
     };
@@ -128,8 +134,13 @@ const UserDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/users');
+
+            toast.success("User deleted successfully! Redirecting to Users List", {
+                autoClose: 2000,
+                onClose: () => router.push("/users"),
+            });
         } catch (error) {
+            toast.error(error.message || "Error deleting user");
             setError(error.message || "Error deleting user");
         }
     };
@@ -157,6 +168,7 @@ const UserDetailPage = () => {
 
     return (
         <div className="p-4">
+            <ToastContainer />
             <h1 className="text-2xl font-bold mb-4 justify-center flex">User Details</h1>
             <form className="space-y-4">
                 <div>

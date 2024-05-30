@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CategoryDetailPage = () => {
     const router = useRouter();
@@ -48,8 +50,12 @@ const CategoryDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/categories');
+            toast.success("Category data saved successfully! Redirecting to Categories List", {
+                autoClose: 2000,
+                onClose: () => router.push("/categories"),
+            });
         } catch (error) {
+            toast.error(error.message || "Error saving category data");
             setError(error.message || "Error saving category data");
         }
     };
@@ -62,8 +68,12 @@ const CategoryDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/categories');
+            toast.success("Category deleted successfully! Redirecting to Categories List", {
+                autoClose: 2000,
+                onClose: () => router.push("/categories"),
+            });
         } catch (error) {
+            toast.error(error.message || "Error deleting category");
             setError(error.message || "Error deleting category");
         }
     };
@@ -86,6 +96,7 @@ const CategoryDetailPage = () => {
 
     return (
         <div className="relative p-4 pt-24 justify-center w-full h-screen">
+            <ToastContainer />
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Category Details</h1>
             <form className="space-y-4">
                 <div>

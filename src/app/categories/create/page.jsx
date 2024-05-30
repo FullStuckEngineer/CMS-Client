@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CategoryCreatePage = () => {
 	const router = useRouter();
@@ -13,26 +15,31 @@ const CategoryCreatePage = () => {
 		setLoading(true);
 		setError(null);
 		try {
-		const token = sessionStorage.getItem("token");
-		const newCategory = { name };
-		await axios.post(
-			`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories`,
-			newCategory,
-			{
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			}
-		);
-		router.push("/categories");
+			const token = sessionStorage.getItem("token");
+			const newCategory = { name };
+			await axios.post(
+				`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/categories`,
+				newCategory,
+				{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				}
+			);
+			toast.success("Category created successfully! Redirecting to Categories List", {
+				autoClose: 2000,
+                onClose: () => router.push("/categories"),
+            });
 		} catch (error) {
-		setError(error.message || "Error creating category");
-		setLoading(false);
+			toast.error(error.message || "Error creating category");
+			setError(error.message || "Error creating category");
+			setLoading(false);
 		}
 	};
 
 	return (
         <div className="relative p-4 pt-24 justify-center w-full h-screen">
+			<ToastContainer />
 			<h1 className="text-2xl font-bold mb-4 justify-center flex">
 				Create New Category
 			</h1>

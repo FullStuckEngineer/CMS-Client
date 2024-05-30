@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Select from 'react-select';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddressCreatePage = () => {
     const router = useRouter();
@@ -111,8 +113,12 @@ const AddressCreatePage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/addresses');
+            toast.success("Success Creating Address! Redirecting to Addresses List", {
+                autoClose: 2000,
+                onClose: () => router.push("/addresses"),
+            });
         } catch (error) {
+            toast.error("Error Creating Address");
             setError(error.message || "Error creating address");
             setLoading(false);
         }
@@ -120,6 +126,7 @@ const AddressCreatePage = () => {
 
     return (
         <div className="relative p-4 pt-24 justify-center w-full h-screen">
+            <ToastContainer />
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Create New Address</h1>
             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleCreateAddress(); }}>
                 {error && <div className="text-color-red mb-4">{error}</div>}

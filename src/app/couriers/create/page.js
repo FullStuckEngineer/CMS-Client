@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CourierCreatePage = () => {
     const router = useRouter();
@@ -20,8 +22,12 @@ const CourierCreatePage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            router.push('/couriers');
+            toast.success("Courier created successfully! Redirecting to Couriers List", {
+                autoClose: 2000,
+                onClose: () => router.push("/couriers")
+            });
         } catch (error) {
+            toast.error(error.message || "Error creating courier");
             setError(error.message || "Error creating courier");
             setLoading(false);
         }
@@ -29,6 +35,7 @@ const CourierCreatePage = () => {
 
     return (
         <div className="relative p-4 pt-24 justify-center w-full h-screen">
+            <ToastContainer />
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Create New Courier</h1>
             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleCreateCourier(); }}>
                 {error && <div className="text-color-red mb-4">{error}</div>}
