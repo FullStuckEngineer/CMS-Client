@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
-  const router = useRouter();
+  const pathname = usePathname();
 
   const menuItems = [
     { name: "Dashboard", path: "/dashboard" },
@@ -19,7 +19,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 h-full bg-color-green text-color-primary w-64 py-6 px-4 z-20">
+    <div className="fixed top-0 left-0 h-full bg-color-darkgreen text-color-primary w-64 py-6 px-4 z-20">
       <Link
         href="/"
         className="font-bold text-color-primary hover:text-color-gray-300 text-2xl p-4"
@@ -33,7 +33,7 @@ const Sidebar = () => {
               <Link
                 href={item.path}
                 className={`block py-2 px-4 rounded-md ${
-                  router.pathname === item.path
+                  pathname === item.path
                     ? "bg-color-greenhover"
                     : "hover:bg-color-greenhover"
                 }`}

@@ -8,7 +8,7 @@ import profilPlaceholder from "@/assets/images/profile-placeholder.jpg";
 import { SignOut } from "@phosphor-icons/react";
 import { AuthContext } from "@/app/layout";
 import axios from "axios";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 
 const Navbar = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -33,6 +33,7 @@ const Navbar = () => {
           }
         );
         const userData = response.data.data;
+        console.log("userData", response);
 
         setUserName(userData.name ? userData.name : "Admin");
         setUserImage(
@@ -47,6 +48,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    console.log("isLoggedIn", isLoggedIn);
     if (isLoggedIn) {
       fetchUserData();
     }
@@ -89,7 +91,7 @@ const Navbar = () => {
         <div className="flex md:flex-row flex-col justify-between md:items-center p-4 gap-2">
           <Link
             href="/"
-            className="font-bold text-color-green hover:text-color-greenhover text-2xl"
+            className="font-bold text-color-darkgreen hover:text-color-greenhover text-2xl"
           >
             BabyBoo
           </Link>

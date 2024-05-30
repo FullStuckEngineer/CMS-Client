@@ -6,6 +6,8 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { AuthContext } from "@/app/layout";
 import { CheckCircle, XCircle } from "@phosphor-icons/react";
+import { jwtDecode } from 'jwt-decode';
+import axios from "axios";
 
 const LoginView = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +41,25 @@ const LoginView = () => {
       if (response.ok) {
         setIsLoading(false);
         form.reset();
+        
+        // Check if user role is 'admin'
+        const decodedToken = jwtDecode(result.accessToken);
+        const userId = decodedToken.id;
+
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/users/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${result.accessToken}`,
+            },
+          }
+        );
+        
+        if (response.data.data.role !== "admin") {
+          setError("You are not authorized to access this page");
+          return;
+        }
+
         sessionStorage.setItem("token", result.accessToken);
         setIsLoggedIn(true);
         setSuccessMessage(

@@ -21,7 +21,8 @@ module.exports = {
         red: "#BA1A1A",
         redhover: "#991b1b",
         greenhover: "#00A19F",
-        green: "#00BDBB",
+        green: "#00a09e",
+        darkgreen: "#01706f",
         dark: "#000000",
         accent: "#ffc639",
         teal: {
