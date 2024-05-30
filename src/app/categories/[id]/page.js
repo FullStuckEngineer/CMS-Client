@@ -85,7 +85,7 @@ const CategoryDetailPage = () => {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="p-4">
+        <div className="relative p-4 pt-24 justify-center w-full h-screen">
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Category Details</h1>
             <form className="space-y-4">
                 <div>
@@ -106,7 +106,7 @@ const CategoryDetailPage = () => {
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
-                    {nameError && <p className="text-red text-sm mt-1">{nameError}</p>}
+                    {nameError && <p className="text-color-red text-sm mt-1">{nameError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Status</label>
@@ -138,7 +138,7 @@ const CategoryDetailPage = () => {
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="button"
-                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={() => saveCategory(category)}
                     >
                         Save
@@ -146,7 +146,7 @@ const CategoryDetailPage = () => {
                     {category.status === "Active" &&
                         <button
                             type="button"
-                            className="bg-red hover:bg-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                            className="bg-color-red hover:bg-color-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                             onClick={deleteCategory}
                         >
                             Delete
@@ -154,7 +154,7 @@ const CategoryDetailPage = () => {
                     }
                     <button
                         type="button"
-                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-color-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/categories')}
                     >
                         Close

@@ -209,7 +209,7 @@ const AddressCreatePage = () => {
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-color-greenhover text-color-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-color-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/addresses')}
                     >
                         Close

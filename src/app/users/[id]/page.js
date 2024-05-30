@@ -209,7 +209,7 @@ const UserDetailPage = () => {
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-color-gray-700">Image</label>
+                    <label className="block text-sm font-medium text-color-gray-700">Photo Profile</label>
                     {image ? (
                         <Image
                             src={image}
@@ -268,7 +268,7 @@ const UserDetailPage = () => {
                     </button>
                     <button
                         type="button"
-                        className="border border-color-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-color-green hover:bg-color-gray-400 hover:text-color-primary text-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/users')}
                     >
                         Close

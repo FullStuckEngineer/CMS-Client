@@ -143,7 +143,7 @@ const CourierDetailPage = () => {
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/couriers')}
                     >
                         Close
