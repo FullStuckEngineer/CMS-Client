@@ -27,6 +27,8 @@ ChartJS.register(
 const DashboardPage = () => {
     const { isLoggedIn } = useContext(AuthContext);
     const router = useRouter();
+    const [isNoOrders, setIsNoOrders] = useState(false);
+    const [isNoProducts, setIsNoProducts] = useState(false);
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -48,6 +50,8 @@ const DashboardPage = () => {
                     }
                 });
                 setData(response.data);
+                if (response.data.ordersByStatus.length === 0) setIsNoOrders(true);
+                if (response.data.topSellingProducts.length === 0) setIsNoProducts(true);
                 setLoading(false);
             } catch (error) {
                 setError('Failed to fetch dashboard data');
@@ -62,11 +66,11 @@ const DashboardPage = () => {
     if (error) return <div className="flex justify-center items-center h-screen">{error}</div>;
 
     const ordersByStatusData = {
-        labels: data.ordersByStatus.map(status => status.status),
+        labels: isNoOrders ? ["No Orders Yet"] : data.ordersByStatus.map(status => status.status),
         datasets: [
             {
                 label: 'Orders by Status',
-                data: data.ordersByStatus.map(status => status._count.status),
+                data: isNoOrders ? [0] : data.ordersByStatus.map(status => status._count.status),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -91,19 +95,17 @@ const DashboardPage = () => {
     };
 
     const topSellingProductsData = {
-        labels: data.topSellingProducts.map(product => product.name),
+        labels: isNoProducts ? ["No Products Sold Yet"] : data.topSellingProducts.map(product => product.name),
         datasets: [
             {
                 label: 'Top 5 Selling Products',
-                data: data.topSellingProducts.map(product => product.quantity),
+                data: isNoProducts ? [0] : data.topSellingProducts.map(product => product.quantity),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
             },
         ],
     };
-
-    console.log("Data Dashboard", data);
 
     return (
         <div className="relative p-4 pt-24 justify-center w-full h-screen">
@@ -115,11 +117,11 @@ const DashboardPage = () => {
                         <div className="flex justify-between w-full">
                             <div className="flex flex-col items-center w-1/2">
                                 <h4 className="text-lg font-medium text-color-gray-700 text-center">Active</h4>
-                                <p className="text-3xl font-bold text-color-green text-center">{data.totalProducts.active}</p>
+                                <p className="text-3xl font-bold text-color-green text-center">{data.totalProducts.active || "-"}</p>
                             </div>
                             <div className="flex flex-col items-center w-1/2">
                                 <h4 className="text-lg font-medium text-color-gray-700 text-center">Inactive</h4>
-                                <p className="text-3xl font-bold text-color-red text-center">{data.totalProducts.inactive}</p>
+                                <p className="text-3xl font-bold text-color-red text-center">{data.totalProducts.inactive || "-"}</p>
                             </div>
                         </div>
                     </div>
@@ -128,36 +130,44 @@ const DashboardPage = () => {
                     <div className="grid grid-rows-3 gap-6 w-full">
                         <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center justify-center h-full">
                             <h2 className="text-xl font-semibold text-color-gray-800 text-center">Total Users</h2>
-                            <p className="text-3xl font-bold text-color-gray-800 text-center">{data.totalUsers}</p>
+                            <p className="text-3xl font-bold text-color-gray-800 text-center">{data.totalUsers || "-"}</p>
                         </div>
                         <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center justify-center h-full">
                             <h2 className="text-xl font-semibold text-color-gray-800 text-center">Total Orders</h2>
-                            <p className="text-3xl font-bold text-color-gray-800  text-center">{data.totalOrders}</p>
+                            <p className="text-3xl font-bold text-color-gray-800  text-center">{data.totalOrders || "-"}</p>
                         </div>
                         <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center justify-center h-full">
                             <h2 className="text-xl font-semibold text-color-gray-800 text-center">Total Revenue</h2>
-                            <p className="text-3xl font-bold text-color-green text-center">Rp{data.totalRevenue}</p>
+                            <p className="text-3xl font-bold text-color-green text-center">{data.totalRevenue ? `Rp${data.totalRevenue}` : "-"}</p>
                         </div>
                     </div>
                     <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center">
                         <h2 className="text-xl font-semibold text-gray-800 text-center">Orders by Status</h2>
-                        <Doughnut data={ordersByStatusData} 
-                            options={
-                                {
-                                    plugins: {
-                                        legend: {
-                                            position: 'right',
+                        {isNoOrders ? (
+                            <p className="text-lg font-semibold text-gray-800 text-center">No Orders Yet</p>
+                        ) : (
+                            <Doughnut data={ordersByStatusData} 
+                                options={
+                                    {
+                                        plugins: {
+                                            legend: {
+                                                position: 'right',
+                                            },
                                         },
-                                    },
-                                }
-                            } 
-                        />
+                                    }
+                                } 
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-6 mt-6 w-full max-w-6xl">
                     <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col items-center">
                         <h2 className="text-xl font-semibold text-color-gray-800 text-center">Top 5 Selling Products</h2>
-                        <Bar data={topSellingProductsData} />
+                        {isNoProducts ? (
+                            <p className="text-lg font-semibold text-color-gray-800 text-center">No Products Sold Yet</p>
+                        ) : (
+                            <Bar data={topSellingProductsData} />
+                        )}
                     </div>
                 </div>
             </div>
