@@ -17,6 +17,8 @@ const AddressCreatePage = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [errorPhone, setErrorPhone] = useState(null);
+    const [errorPostalCode, setErrorPostalCode] = useState(null);
 
     useEffect(() => {
         fetchCities();
@@ -75,6 +77,24 @@ const AddressCreatePage = () => {
     const handleCreateAddress = async () => {
         setLoading(true);
         setError(null);
+
+        setReceiverPhone(receiverPhone.replace(/\s/g, ''));
+        const phoneRegex = /^[+]?\d+(-\d+)*$/;
+
+        if (!phoneRegex.test(receiverPhone)) {
+            setErrorPhone("Receiver Phone must be a valid number");
+            setLoading(false);
+            return;
+        }
+
+        const postalCodeRegex = /^\d{5}$/;
+        if (!postalCodeRegex.test(postalCode)) {
+            setErrorPostalCode("Postal Code must be a 5-digit number");
+            setLoading(false);
+            return;
+        }
+        
+
         try {
             const token = sessionStorage.getItem("token");
             const newAddress = {
@@ -99,10 +119,10 @@ const AddressCreatePage = () => {
     };
 
     return (
-        <div className="p-4">
+        <div className="relative p-4 pt-24 justify-center w-full h-screen">
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Create New Address</h1>
             <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleCreateAddress(); }}>
-                {error && <div className="text-red mb-4">{error}</div>}
+                {error && <div className="text-color-red mb-4">{error}</div>}
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Receiver Name</label>
                     <input
@@ -122,6 +142,7 @@ const AddressCreatePage = () => {
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
+                    {errorPhone && <div className="text-color-red">{errorPhone}</div>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Detail Address</label>
@@ -164,6 +185,7 @@ const AddressCreatePage = () => {
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
+                    {errorPostalCode && <div className="text-color-red">{errorPostalCode}</div>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">User</label>
@@ -180,14 +202,14 @@ const AddressCreatePage = () => {
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="submit"
-                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         disabled={loading}
                     >
                         {loading ? 'Creating...' : 'Create'}
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-greenhover text-color-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/addresses')}
                     >
                         Close

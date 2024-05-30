@@ -131,6 +131,21 @@ const AddressDetailPage = () => {
             return;
         }
 
+        updatedAddress.receiver_phone = updatedAddress.receiver_phone.replace(/\s/g, '');
+        const phoneRegex = /^[+]?\d+(-\d+)*$/;
+
+        if (!phoneRegex.test(updatedAddress.receiver_phone)) {
+            setPhoneError("Receiver Phone must be a valid number");
+            return;
+        }
+
+        const postalCodeRegex = /^\d{5}$/;
+        if (!postalCodeRegex.test(updatedAddress.postal_code)) {
+            setPostalCodeError("Postal Code must be a 5-digit number");
+            return;
+        }
+        
+
         try {
             const token = sessionStorage.getItem("token");
             await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/addresses/${id}`, updatedAddress, {
@@ -208,7 +223,7 @@ const AddressDetailPage = () => {
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
-                    {nameError && <p className="text-red text-sm mt-1">{nameError}</p>}
+                    {nameError && <p className="text-color-red text-sm mt-1">{nameError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Receiver Phone</label>
@@ -219,7 +234,7 @@ const AddressDetailPage = () => {
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
-                    {phoneError && <p className="text-red text-sm mt-1">{phoneError}</p>}
+                    {phoneError && <p className="text-color-red text-sm mt-1">{phoneError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Detail Address</label>
@@ -230,7 +245,7 @@ const AddressDetailPage = () => {
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
-                    {detailAddressError && <p className="text-red text-sm mt-1">{detailAddressError}</p>}
+                    {detailAddressError && <p className="text-color-red text-sm mt-1">{detailAddressError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">City</label>
@@ -243,7 +258,7 @@ const AddressDetailPage = () => {
                         isSearchable
                         required
                     />
-                    {cityError && <p className="text-red text-sm mt-1">{cityError}</p>}
+                    {cityError && <p className="text-color-red text-sm mt-1">{cityError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Province</label>
@@ -254,18 +269,18 @@ const AddressDetailPage = () => {
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
-                    {provinceError && <p className="text-red text-sm mt-1">{provinceError}</p>}
+                    {provinceError && <p className="text-color-red text-sm mt-1">{provinceError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Postal Code</label>
                     <input
                         type="text"
                         value={address.postal_code}
-                        onChange={(e) => setAddress({ ...address, postal_code: e.target.value })}
+                        onChange={(e) => setAddress({ ...address, postal_code: parseInt(e.target.value) })}
                         className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2"
                         required
                     />
-                    {postalCodeError && <p className="text-red text-sm mt-1">{postalCodeError}</p>}
+                    {postalCodeError && <p className="text-color-red text-sm mt-1">{postalCodeError}</p>}
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Created At</label>
@@ -288,21 +303,21 @@ const AddressDetailPage = () => {
                 <div className="flex space-x-2 justify-center">
                     <button
                         type="button"
-                        className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={() => saveAddress(address)}
                     >
                         Save
                     </button>
                     <button
                         type="button"
-                        className="bg-color-red hover:bg-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
+                        className="bg-color-red hover:bg-color-redhover text-color-primary rounded-lg h-10 md:w-32 w-40"
                         onClick={deleteAddress}
                     >
                         Delete
                     </button>
                     <button
                         type="button"
-                        className="border border-green hover:bg-color-greenhover text-green rounded-lg h-10 md:w-32 w-40"
+                        className="border border-green hover:bg-color-greenhover text-color-green rounded-lg h-10 md:w-32 w-40"
                         onClick={() => router.push('/addresses')}
                     >
                         Close
