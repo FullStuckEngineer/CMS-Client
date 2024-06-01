@@ -212,7 +212,7 @@ const AddressDetailPage = () => {
                         type="text"
                         value={address.id}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -301,7 +301,7 @@ const AddressDetailPage = () => {
                         type="text"
                         value={formatDate(address.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -310,7 +310,7 @@ const AddressDetailPage = () => {
                         type="text"
                         value={formatDate(address.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">

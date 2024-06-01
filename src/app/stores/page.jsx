@@ -246,7 +246,7 @@ const StoreProfilePage = () => {
                     <input
                         type="text"
                         value={createdAt}
-                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgray"
                         readOnly
                     />
                 </div>
@@ -257,7 +257,7 @@ const StoreProfilePage = () => {
                     <input
                         type="text"
                         value={updatedAt}
-                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgray"
                         readOnly
                     />
                 </div>

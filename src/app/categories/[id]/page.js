@@ -105,7 +105,7 @@ const CategoryDetailPage = () => {
                         type="text"
                         value={category.id}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -125,7 +125,7 @@ const CategoryDetailPage = () => {
                         type="text"
                         value={category.status}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -134,7 +134,7 @@ const CategoryDetailPage = () => {
                         type="text"
                         value={formatDate(category.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -143,7 +143,7 @@ const CategoryDetailPage = () => {
                         type="text"
                         value={formatDate(category.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">

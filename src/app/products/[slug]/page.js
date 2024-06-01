@@ -182,7 +182,7 @@ const ProductDetailPage = () => {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
-    const inputClass = (isReadOnly) => isReadOnly ? "mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen" : "mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2";
+    const inputClass = (isReadOnly) => isReadOnly ? "mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgray" : "mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2";
 
     return (
         <div className="relative p-4 pt-24 justify-center w-full h-screen">
@@ -195,7 +195,7 @@ const ProductDetailPage = () => {
                         type="text"
                         value={product.id}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgray"
                     />
                 </div>
                 <div>
@@ -277,7 +277,7 @@ const ProductDetailPage = () => {
                         type="text"
                         value={product.slug}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgray"
                     />
                 </div>
                 <div>
@@ -331,7 +331,7 @@ const ProductDetailPage = () => {
                         type="text"
                         value={formatDate(product.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgray"
                     />
                 </div>
                 <div>
@@ -340,7 +340,7 @@ const ProductDetailPage = () => {
                         type="text"
                         value={formatDate(product.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgreen"
+                        className="mt-1 block w-full border border-color-gray-200 text-color-primary rounded-md shadow-sm p-2 bg-color-darkgray"
                     />
                 </div>
                 <div className="flex space-x-2 justify-center">
