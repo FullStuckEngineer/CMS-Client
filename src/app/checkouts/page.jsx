@@ -388,23 +388,23 @@ const CheckoutPage = () => {
                         ))}
                     </tbody>
                 </table>
-                <div className="absolute right-[35rem] bottom-5 flex justify-center mt-4">
+                <div className="mt-4 bottom-5 flex justify-center mt-4">
                     {currentPage > 1 && (
-                        <button
-                            onClick={() => paginate(1)}
-                            className="mx-1 px-3 py-1 text-color-gray-600 hover:text-color-primary rounded hover:bg-color-green"
-                        >
-                            <ArrowLineLeft />
-                        </button>
+                    <button
+                        onClick={() => paginate(1)}
+                        className="mx-1 px-3 py-1 text-color-gray-600 hover:text-color-primary rounded hover:bg-color-green"
+                    >
+                        <ArrowLineLeft />
+                    </button>
                     )}
                     {renderPageNumbers()}
                     {currentPage < totalPages && (
-                        <button
-                            onClick={() => paginate(totalPages)}
-                            className="mx-1 px-3 py-1 text-color-gray-600 hover:text-color-primary rounded hover:bg-color-green"
-                        >
-                            <ArrowLineRight />
-                        </button>
+                    <button
+                        onClick={() => paginate(totalPages)}
+                        className="mx-1 px-3 py-1 text-color-gray-600 hover:text-color-primary rounded hover:bg-color-green"
+                    >
+                        <ArrowLineRight />
+                    </button>
                     )}
                 </div>
             </div>
