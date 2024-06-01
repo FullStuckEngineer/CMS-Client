@@ -6,6 +6,9 @@ import axios from 'axios';
 import Select from 'react-select';
 import Image from "next/image";
 import receiptPlaceholder from "@/assets/images/receipt-placeholder.jpg";
+import Modal from 'react-modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CheckoutDetailPage = () => {
     const { isLoggedIn } = useContext(AuthContext);
@@ -20,6 +23,8 @@ const CheckoutDetailPage = () => {
     const [error, setError] = useState(null);
     const [image, setImage] = useState(null);
     const [userEmail, setUserEmail] = useState('');
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [buttonLoading, setButtonLoading] = useState(false);
 
     const statusOptions = [
         { value: 'waiting_payment', label: 'Waiting Payment' },
@@ -63,7 +68,6 @@ const CheckoutDetailPage = () => {
                 return { ...checkoutProduct, product: { name: productName } };
             });
     
-            console.log(productsWithNames);
             setCheckoutProducts(productsWithNames);
     
             setCheckout({ ...checkoutData, user: { username }, courier: { name: courierName } });
@@ -119,6 +123,7 @@ const CheckoutDetailPage = () => {
     }; 
 
     const acceptPayment = async () => {
+        setButtonLoading(true);
         try {
             const token = sessionStorage.getItem("token");
             await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/checkouts/${checkout.id}`, { status: 'processing' }, {
@@ -134,39 +139,139 @@ const CheckoutDetailPage = () => {
                 shipping_method: checkout.shipping_method
             };
             
-            await sendEmailNotification(userEmail, transactionDetails);
+            await sendEmailNotification(userEmail, transactionDetails, 'Transaction Approved');
             setStatus('processing');
+            toast.success("Payment accepted successfully!");
         } catch (error) {
             setError(error.message || "Error accepting payment");
+            toast.error("Error accepting payment");
+        } finally {
+            setButtonLoading(false);
         }
     };
-    
-    
-    const sendEmailNotification = async (email, transactionDetails) => {
+
+    const rejectPayment = async () => {
+        setButtonLoading(true);
+        try {
+            const token = sessionStorage.getItem("token");
+            await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/checkouts/${checkout.id}`, { status: 'cancelled' }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            
+            const transactionDetails = {
+                id: checkout.id,
+                total_cost: checkout.net_price,
+                payment_method: checkout.payment_method,
+                shipping_method: checkout.shipping_method
+            };
+            
+            await sendEmailNotification(userEmail, transactionDetails, 'Payment Rejected');
+            setStatus('cancelled');
+            toast.success("Payment rejected successfully!");
+        } catch (error) {
+            setError(error.message || "Error rejecting payment");
+            toast.error("Error rejecting payment");
+        } finally {
+            setButtonLoading(false);
+        }
+    };
+
+    const sendEmailNotification = async (email, transactionDetails, subject) => {
         try {
             const token = sessionStorage.getItem("token");
             const { id, total_cost, payment_method, shipping_method } = transactionDetails;
-    
-            const emailBody = `
-                <div style="font-family: Arial, sans-serif; color: #000;">
-                    <p>Dear Customer,</p>
-                    <p>We are pleased to inform you that your transaction has been successfully approved by our admin team. Here are the details of your transaction:</p>
-                    <ul>
-                        <li><strong>Transaction ID:</strong> ${id}</li>
-                        <li><strong>Total Amount:</strong> ${total_cost}</li>
-                        <li><strong>Payment Method:</strong> ${payment_method}</li>
-                        <li><strong>Shipping Method:</strong> ${shipping_method}</li>
-                    </ul>
-                    <p>We are now processing your order and will notify you once it has been shipped.</p>
-                    <p>If you have any questions or need further assistance, please feel free to contact our customer support team.</p>
-                    <p>Thank you for shopping with us!</p>
-                    <p>Best regards,<br/>The Company Team</p>
-                </div>
-            `;
+
+            let emailBody = '';
+            if (subject === 'Transaction Approved') {
+                emailBody = `
+                    <div style="font-family: Arial, sans-serif; color: #000;">
+                        <p>Dear Customer,</p>
+                        <p>We are pleased to inform you that your transaction has been successfully approved by our admin team. Here are the details of your transaction:</p>
+                        <ul>
+                            <li><strong>Transaction ID:</strong> ${id}</li>
+                            <li><strong>Total Amount:</strong> ${total_cost}</li>
+                            <li><strong>Payment Method:</strong> ${payment_method}</li>
+                            <li><strong>Shipping Method:</strong> ${shipping_method}</li>
+                        </ul>
+                        <p>We are now processing your order and will notify you once it has been shipped.</p>
+                        <p>If you have any questions or need further assistance, please feel free to contact our customer support team.</p>
+                        <p>Thank you for shopping with us!</p>
+                        <p>Best regards,<br/>The Company Team</p>
+                    </div>
+                `;
+            } else if (subject === 'Payment Rejected') {
+                emailBody = `
+                    <div style="font-family: Arial, sans-serif; color: #000;">
+                        <p>Dear Customer,</p>
+                        <p>We regret to inform you that your payment has been rejected by our admin team. Here are the details of your transaction:</p>
+                        <ul>
+                            <li><strong>Transaction ID:</strong> ${id}</li>
+                            <li><strong>Total Amount:</strong> ${total_cost}</li>
+                            <li><strong>Payment Method:</strong> ${payment_method}</li>
+                            <li><strong>Shipping Method:</strong> ${shipping_method}</li>
+                        </ul>
+                        <p>The transaction has been canceled and you will not be charged for this order.</p>
+                        <p>If you have any questions or need further assistance, please feel free to contact our customer support team.</p>
+                        <p>Thank you for shopping with us!</p>
+                        <p>Best regards,<br/>The Company Team</p>
+                    </div>
+                `;
+            } else if (subject === 'Order Shipped') {
+                emailBody = `
+                    <div style="font-family: Arial, sans-serif; color: #000;">
+                        <p>Dear Customer,</p>
+                        <p>We are pleased to inform you that your order has been shipped. Here are the details of your transaction:</p>
+                        <ul>
+                            <li><strong>Transaction ID:</strong> ${id}</li>
+                            <li><strong>Total Amount:</strong> ${total_cost}</li>
+                            <li><strong>Payment Method:</strong> ${payment_method}</li>
+                            <li><strong>Shipping Method:</strong> ${shipping_method}</li>
+                        </ul>
+                        <p>Your order is now on its way to you and you can track the delivery status using the tracking number provided by the courier.</p>
+                        <p>If you have any questions or need further assistance, please feel free to contact our customer support team.</p>
+                        <p>Thank you for shopping with us!</p>
+                        <p>Best regards,<br/>The Company Team</p>
+                    </div>
+                `;
+            } else if (subject === 'Order Delivered') {
+                emailBody = `
+                    <div style="font-family: Arial, sans-serif; color: #000;">
+                        <p>Dear Customer,</p>
+                        <p>We are pleased to inform you that your order has been successfully delivered. Here are the details of your transaction:</p>
+                        <ul>
+                            <li><strong>Transaction ID:</strong> ${id}</li>
+                            <li><strong>Total Amount:</strong> ${total_cost}</li>
+                            <li><strong>Payment Method:</strong> ${payment_method}</li>
+                            <li><strong>Shipping Method:</strong> ${shipping_method}</li>
+                        </ul>
+                        <p>Your order has been received and we hope you are satisfied with your purchase. If you have any questions or need further assistance, please feel free to contact our customer support team.</p>
+                        <p>Thank you for shopping with us!</p>
+                        <p>Best regards,<br/>The Company Team</p>
+                    </div>
+                `;
+            } else if (subject === 'Order Completed') {
+                emailBody = `
+                    <div style="font-family: Arial, sans-serif; color: #000;">
+                        <p>Dear Customer,</p>
+                        <p>We are pleased to inform you that your order has been successfully completed. Here are the details of your transaction:</p>
+                        <ul>
+                            <li><strong>Transaction ID:</strong> ${id}</li>
+                            <li><strong>Total Amount:</strong> ${total_cost}</li>
+                            <li><strong>Payment Method:</strong> ${payment_method}</li>
+                            <li><strong>Shipping Method:</strong> ${shipping_method}</li>
+                        </ul>
+                        <p>Your order has been completed and we hope you are satisfied with your purchase. If you have any questions or need further assistance, please feel free to contact our customer support team.</p>
+                        <p>Thank you for shopping with us!</p>  
+                        <p>Best regards,<br/>The Company Team</p>
+                    </div>
+                `;
+            }
     
             await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/checkouts/email-notif`, {
                 to: email,
-                subject: 'Transaction Approved',
+                subject: subject,
                 html: emailBody
             }, {
                 headers: {
@@ -177,7 +282,66 @@ const CheckoutDetailPage = () => {
             console.error("Error sending email notification:", error.message || error);
         }
     };    
-    
+
+    const advanceStatus = async () => {
+        setButtonLoading(true);
+        const statusOrder = [
+            'waiting_payment',
+            'payment_verified',
+            'processing',
+            'shipping',
+            'delivered',
+            'completed'
+        ];
+        const currentIndex = statusOrder.indexOf(status);
+        if (currentIndex < statusOrder.length - 1) {
+            const nextStatus = statusOrder[currentIndex + 1];
+            try {
+                const token = sessionStorage.getItem("token");
+                await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL_API}/cms/checkouts/${checkout.id}`, { status: nextStatus }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                let emailSubject = '';
+                if (nextStatus === 'processing') {
+                    emailSubject = 'Transaction Approved';
+                } else if (nextStatus === 'shipping') {
+                    emailSubject = 'Order Shipped';
+                } else if (nextStatus === 'delivered') {
+                    emailSubject = 'Order Delivered';
+                } else if (nextStatus === 'completed') {
+                    emailSubject = 'Order Completed';
+                }
+
+                const transactionDetails = {
+                    id: checkout.id,
+                    total_cost: checkout.net_price,
+                    payment_method: checkout.payment_method,
+                    shipping_method: checkout.shipping_method
+                };
+                await sendEmailNotification(userEmail, transactionDetails, emailSubject);
+
+                setStatus(nextStatus);
+                toast.success("Status advanced successfully!");
+            } catch (error) {
+                console.error("Error advancing status:", error.message || error);
+                toast.error("Error advancing status");
+            } finally {
+                setButtonLoading(false);
+            }
+        }
+    };
+
+    const openModal = () => {
+        setModalIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalIsOpen(false);
+    };
+
     const formatDate = (dateString) => {
         const options = {
             year: 'numeric',
@@ -195,7 +359,7 @@ const CheckoutDetailPage = () => {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="p-4">
+        <div className="relative p-4 pt-24 justify-center w-full h-screen">
             <h1 className="text-2xl font-bold mb-4 justify-center flex">Transaction Details</h1>
             <form className="space-y-4">
                 <div>
@@ -204,7 +368,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.id}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -213,7 +377,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={`${checkout.user_id}: ${checkout.user.username}`}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -222,7 +386,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.address_id}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -231,7 +395,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={`${checkout.courier_id}: ${checkout.courier.name}`}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -240,7 +404,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.shipping_method}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -249,7 +413,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.shipping_note}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -258,7 +422,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.total_weight}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -267,7 +431,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.total_cost}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -276,7 +440,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.shipping_cost}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -285,7 +449,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.net_price}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -294,7 +458,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.payment_method}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -303,7 +467,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={checkout.bank}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -313,18 +477,30 @@ const CheckoutDetailPage = () => {
                             <Image
                                 src={image}
                                 alt="Payment Receipt"
-                                className="w-32 h-32 object-cover"
+                                className="w-32 h-32 object-cover cursor-pointer"
                                 width={128}
                                 height={128}
+                                onClick={openModal}
                             />
                             {status === 'payment_verified' && payment_method === 'manual' && (
-                                <button
-                                    type="button"
-                                    className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 ml-4 px-4"
-                                    onClick={acceptPayment}
-                                >
-                                    Accept
-                                </button>
+                                <div className="flex flex-col space-y-5">
+                                    <button
+                                        type="button"
+                                        className={`bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 ml-4 px-4 ${buttonLoading ? "cursor-not-allowed" : ""}`}
+                                        onClick={acceptPayment}
+                                        disabled={buttonLoading}
+                                    >
+                                        {buttonLoading ? "Loading..." : "Accept"}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={`bg-color-red hover:bg-color-redhover text-color-primary rounded-lg h-10 ml-4 px-4 ${buttonLoading ? "cursor-not-allowed" : ""}`}
+                                        onClick={rejectPayment}
+                                        disabled={buttonLoading}
+                                    >
+                                        {buttonLoading ? "Loading..." : "Reject"}
+                                    </button>
+                                </div>
                             )}
                         </div>
                     ) : (
@@ -339,22 +515,45 @@ const CheckoutDetailPage = () => {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Status</label>
-                    <Select
-                        value={statusOptions.find(option => option.value === status)}
-                        onChange={(selected) => setStatus(selected.value)}
-                        options={statusOptions}
-                        className="mt-1 block w-full"
-                        placeholder="Select Status"
-                        isSearchable
-                        isDisabled={true}
-                    />
+                    <div className="flex items-center space-x-2 justify-center">
+                        {statusOptions.map((option, index) => (
+                            <div key={option.value} className="flex items-center">
+                                <span
+                                    className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                                        status === option.value 
+                                            ? 'bg-color-darkgreen text-color-primary' 
+                                            : statusOptions.findIndex(opt => opt.value === status) > index 
+                                                ? 'bg-color-green text-color-primary' 
+                                                : 'bg-color-gray-200 text-gray-600'
+                                    }`}
+                                >
+                                    {option.label}
+                                </span>
+                                {index < statusOptions.length - 1 && (
+                                    <div className="flex-1 text-color-gray-400 mx-2"> -- </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                    <button
+                        type="button"
+                        className={`border rounded-lg h-8 mt-4 md:w-32 w-40 items-center justify-center flex mx-auto ${
+                            status === 'completed' || status === 'cancelled' || (status === 'payment_verified' && payment_method === 'manual') 
+                                ? 'border-color-gray-300 bg-color-gray-300 text-gray-600 cursor-not-allowed text-color-primary' 
+                                : 'border-color-green bg-color-green hover:bg-color-greenhover hover:text-color-primary text-color-primary'
+                        } ${buttonLoading ? "cursor-not-allowed" : ""}`}
+                        onClick={advanceStatus}
+                        disabled={status === 'completed' || status === 'cancelled' || (status === 'payment_verified' && payment_method === 'manual') || buttonLoading}
+                    >
+                        {buttonLoading ? "Loading..." : "Next Status"}
+                    </button>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-color-gray-700">Midtrans Data</label>
                     <textarea
                         value={JSON.stringify(checkout.midtrans_data, null, 2)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                         rows="4"
                     />
                 </div>
@@ -364,7 +563,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={formatDate(checkout.created_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
                 <div>
@@ -373,7 +572,7 @@ const CheckoutDetailPage = () => {
                         type="text"
                         value={formatDate(checkout.update_at)}
                         readOnly
-                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgreen text-color-primary"
+                        className="mt-1 block w-full border border-color-gray-200 rounded-md shadow-sm p-2 bg-color-darkgray text-color-primary"
                     />
                 </div>
             </form>
@@ -417,6 +616,36 @@ const CheckoutDetailPage = () => {
                     Close
                 </button>
             </div>
+
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Payment Receipt"
+                className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center"
+                overlayClassName="fixed inset-0 bg-color-dark bg-opacity-50"
+            >
+                <div className="bg-white p-4 rounded-lg shadow-lg max-w-lg w-full bg-color-primary">
+                    <h2 className="text-2xl font-bold mb-4">Payment Receipt</h2>
+                    <Image
+                        src={image}
+                        alt="Payment Receipt"
+                        className="w-full h-auto"
+                        width={500}
+                        height={500}
+                    />
+                    <div className="flex justify-end mt-4">
+                        <button
+                            type="button"
+                            className="bg-color-red hover:bg-color-redhover text-color-primary rounded-lg h-10 px-4 ml-2"
+                            onClick={closeModal}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            <ToastContainer />
         </div>
     );
 };

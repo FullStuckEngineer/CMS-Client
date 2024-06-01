@@ -23,6 +23,7 @@ module.exports = {
         greenhover: "#008988",
         green: "#00a09e",
         darkgreen: "#01706f",
+        darkgreen2: "#274e13",
         dark: "#000000",
         accent: "#ffc639",
         darkyellow: "#e3b72f",

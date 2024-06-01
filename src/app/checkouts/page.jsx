@@ -260,7 +260,7 @@ const CheckoutPage = () => {
         processing: "inline-block px-3 py-1 rounded-full text-color-primary text-sm font-semibold bg-color-purple",
         shipping: "inline-block px-3 py-1 rounded-full text-color-primary text-sm font-semibold bg-color-blue-600",
         delivered: "inline-block px-3 py-1 rounded-full text-color-primary text-sm font-semibold bg-color-blue-500",
-        completed: "inline-block px-3 py-1 rounded-full text-color-primary text-sm font-semibold bg-color-greenhover",
+        completed: "inline-block px-3 py-1 rounded-full text-color-primary text-sm font-semibold bg-color-darkgreen2",
         cancelled: "inline-block px-3 py-1 rounded-full text-color-primary text-sm font-semibold bg-color-red",
     };
 
