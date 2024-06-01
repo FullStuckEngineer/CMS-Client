@@ -320,7 +320,7 @@ const CheckoutDetailPage = () => {
                             {status === 'payment_verified' && payment_method === 'manual' && (
                                 <button
                                     type="button"
-                                    className="bg-green hover:bg-greenhover text-color-primary rounded-lg h-10 ml-4 px-4"
+                                    className="bg-color-green hover:bg-color-greenhover text-color-primary rounded-lg h-10 ml-4 px-4"
                                     onClick={acceptPayment}
                                 >
                                     Accept
@@ -411,7 +411,7 @@ const CheckoutDetailPage = () => {
             <div className="flex justify-center mt-10">
                 <button
                     type="button"
-                    className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-green rounded-lg h-10 md:w-32 w-40"
+                    className="border border-green hover:bg-color-gray-400 hover:text-color-primary text-color-green rounded-lg h-10 md:w-32 w-40"
                     onClick={() => router.push('/checkouts')}
                 >
                     Close
