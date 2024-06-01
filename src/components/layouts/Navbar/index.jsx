@@ -9,6 +9,7 @@ import { SignOut } from "@phosphor-icons/react";
 import { AuthContext } from "@/app/layout";
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
+import webLogo from "@/assets/images/web-logo.png";
 
 const Navbar = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -89,11 +90,17 @@ const Navbar = () => {
         </div>
       ) : (
         <div className="flex md:flex-row flex-col justify-between md:items-center p-4 gap-2">
-          <Link
-            href="/"
-            className="font-bold text-color-darkgreen hover:text-color-greenhover text-2xl"
-          >
-            BabyBoo
+          <Link href="/" className="flex items-center">
+            <Image
+              src={webLogo}
+              alt="Website Logo"
+              width={40}
+              height={40}
+              className="mr-2 rounded-full w-auto h-auto"
+            />
+            <span className="font-bold text-color-green hover:text-color-greenhover text-2xl">
+              BabyBoo
+            </span>
           </Link>
           {!isAuthRoute && (
             <div className="flex md:flex-row flex-col justify-left md:items-center md:gap-8 gap-4">

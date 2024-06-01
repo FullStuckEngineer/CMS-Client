@@ -34,7 +34,9 @@ export default function RootLayout({ children, session }) {
     <html lang="en">
       <head>
         <title>BabyBoo</title>
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </head>
+
       <body
         className={`${poppins.className} bg-color-primary h-screen flex`}
         suppressHydrationWarning={true}
