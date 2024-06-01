@@ -155,7 +155,6 @@ const AddressDetailPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            toas
 
             toast.success("Success Saving Address Data! Redirecting to Addresses List", {
 				autoClose: 2000,
